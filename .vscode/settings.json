@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "app_power_manage.h": "c",
+        "audio_config.h": "c",
+        "includes.h": "c",
+        "adv_hearing_aid_setting.h": "c",
+        "app_protocol_event.h": "c",
+        "rcsp_adv_opt.h": "c",
+        "log.h": "c"
+    }
+}
