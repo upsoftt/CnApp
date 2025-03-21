@@ -185,18 +185,13 @@ extern int audio_enc_init();
 
 
 
-__attribute__((weak))
-u8 get_charge_online_flag(void)
-{
-    return 0;
-}
-
 /*充电拔出,CPU软件复位, 不检测按键，直接开机*/
 static void app_poweron_check(int update)
 {
 #if (CONFIG_BT_MODE == BT_NORMAL)
     if (!update && cpu_reset_by_soft()) {
         app_var.play_poweron_tone = 0;
+        app_var.restart_stop_poweron_led = 0;
         return;
     }
 
@@ -229,7 +224,6 @@ void app_main()
 
     log_info("app_main\n");
     app_var.start_time = timer_get_ms();
-
 #if (defined(CONFIG_MEDIA_NEW_ENABLE) || (defined(CONFIG_MEDIA_DEVELOP_ENABLE)))
     /*解码器*/
     audio_enc_init();
@@ -267,12 +261,12 @@ void app_main()
         start_app(&it);
     } else {
         check_power_on_voltage();
-
+        app_var.restart_stop_poweron_led = 1;
         app_poweron_check(update);
-
         ui_manage_init();
-        ui_update_status(STATUS_POWERON);
-
+        if(app_var.restart_stop_poweron_led){
+            ui_update_status(STATUS_POWERON);
+        }
 #if TCFG_WIRELESS_MIC_ENABLE
         extern void wireless_mic_main_run(void);
         wireless_mic_main_run();

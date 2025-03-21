@@ -192,7 +192,7 @@
 //触摸时电容变化量越大, 推荐选择灵敏度级数越小,
 //用户可以从灵敏度级数为0开始调试, 级数逐渐增大, 直到选择一个合适的灵敏度配置值.
 #define TCFG_LP_TOUCH_KEY0_SENSITIVITY		5 	//触摸按键0电容检测灵敏度配置(级数0 ~ 9)
-#define TCFG_LP_TOUCH_KEY1_SENSITIVITY		6 	//触摸按键1电容检测灵敏度配置(级数0 ~ 9)
+#define TCFG_LP_TOUCH_KEY1_SENSITIVITY		5 	//触摸按键1电容检测灵敏度配置(级数0 ~ 9)
 #define TCFG_LP_TOUCH_KEY2_SENSITIVITY		5 	//触摸按键2电容检测灵敏度配置(级数0 ~ 9)
 #define TCFG_LP_TOUCH_KEY3_SENSITIVITY		5 	//触摸按键3电容检测灵敏度配置(级数0 ~ 9)
 #define TCFG_LP_TOUCH_KEY4_SENSITIVITY		5 	//触摸按键4电容检测灵敏度配置(级数0 ~ 9)
@@ -628,8 +628,8 @@
 // #endif//TCFG_EQ_ENABLE
 
 
-#define TCFG_DRC_ENABLE							  0	  /*DRC 总使能*/
-#define TCFG_BT_MUSIC_DRC_ENABLE            	  0     //支持蓝牙音乐DRC
+#define TCFG_DRC_ENABLE							  1	  /*DRC 总使能*/
+#define TCFG_BT_MUSIC_DRC_ENABLE            	  1     //支持蓝牙音乐DRC
 #define TCFG_MUSIC_MODE_DRC_ENABLE                0     //支持音乐模式DRC
 #define TCFG_PC_MODE_DRC_ENABLE                   0     //支持PC模式DRC
 #define TCFG_CVP_UL_DRC_ENABLE           		  0     //支持通话上行DRC

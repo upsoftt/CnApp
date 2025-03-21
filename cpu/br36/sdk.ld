@@ -32,8 +32,6 @@
 
 
 
-
-
   local_irq_enable = ABSOLUTE(0x10fe00);
   local_irq_disable = ABSOLUTE(0x10fe04);
   lp_signature_set = ABSOLUTE(0x10fe08);

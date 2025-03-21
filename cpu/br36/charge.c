@@ -513,7 +513,7 @@ static void ldo5v_detect(void *priv)
             __this->ldo5v_timer = 0;
             if ((charge_flag & BIT_LDO5V_IN) == 0) {
                 charge_flag = BIT_LDO5V_IN;
-				                charge_state_flag = 1;
+				charge_state_flag = 1;
                 charge_event_to_user(CHARGE_EVENT_LDO5V_IN);
             }
         }
@@ -531,7 +531,7 @@ static void ldo5v_detect(void *priv)
             __this->ldo5v_timer = 0;
             if ((charge_flag & BIT_LDO5V_OFF) == 0) {
                 charge_flag = BIT_LDO5V_OFF;
-				                charge_state_flag = 0;
+				charge_state_flag = 0;
                 charge_event_to_user(CHARGE_EVENT_LDO5V_OFF);
             }
         }

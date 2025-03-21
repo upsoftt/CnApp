@@ -65,16 +65,17 @@ const static struct ch_adjust_table ch_sensitivity_table[] = {
     {  109,   131,  1631}, // level 8
     {  109,   131,  1295}, // level 9
 //ch1  PB1
-    {   10,    15,   126}, // level 0
-    {   10,    15,   117}, // level 1
-    {   10,    15,   107}, // level 2
-    {   10,    15,    97}, // level 3
-    {   10,    15,    87}, // level 4
-    {   10,    15,    77}, // level 5
-    {   10,    15,    67}, // level 6
-    {   10,    15,    57}, // level 7
-    {   10,    15,    47}, // level 8
-    {   10,    15,    38}, // level 9
+    {   10,  5815,   398}, // level 0
+    {   10,  5815,   358}, // level 1
+    {   10,  5815,   319}, // level 2
+    {   10,  5815,   279}, // level 3
+    {   10,  5815,   239}, // level 4
+    {   10,  5815,   199}, // level 5
+    {   10,  5815,   159}, // level 6
+    {   10,  5815,   119}, // level 7
+    {   10,  5815,    80}, // level 8
+    {   10,  5815,    40}, // level 9
+
 //ch2  PB2
     {   10,    15,   152}, // level 0
     {   10,    15,   140}, // level 1
@@ -113,7 +114,7 @@ const static struct ch_adjust_table ch_sensitivity_table[] = {
 
 #define LPCTMU_VH_LEVEL     3 // 上限电压档位
 #define LPCTMU_VL_LEVEL     0 // 下限电压档位
-#define LPCTMU_CUR_LEVEL    7 // 充放电电流档位
+#define LPCTMU_CUR_LEVEL    5 // 充放电电流档位
 
 static const u8 lpctmu_ana_vh_table[4] = {
     LPCTMU_VH_065V,

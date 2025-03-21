@@ -34,6 +34,7 @@ typedef struct _APP_VAR {
     float enc_degradation;//default:1,range[0:1]
     u8 siri_key_start;
     u8 siri_support_close;
+    u8 restart_stop_poweron_led;
 } APP_VAR;
 
 typedef struct _BT_USER_PRIV_VAR {

@@ -227,13 +227,15 @@ void ldo5v_keep_deal(void)
             putchar('S');
             return;
         }
-		        extern unsigned char get_chager_state_flag();
+		extern unsigned char get_chager_state_flag();
         if(get_chager_state_flag()){
-        if (ldo5v_keep_timer == 0) {
-            //延时执行避免测试盒通信不上
-            ldo5v_keep_timer = sys_timeout_add(NULL, ldo5v_keep_delay_deal, 250);
+            if (ldo5v_keep_timer == 0) {
+                //延时执行避免测试盒通信不上
+                ldo5v_keep_timer = sys_timeout_add(NULL, ldo5v_keep_delay_deal, 250);
+            }
+        }else{
+            task_switch_to_bt();
         }
-        	}
 #else
         ldo5v_keep_delay_deal(NULL);
 #endif//TCFG_TEST_BOX_ENABLE || TCFG_ANC_BOX_ENABLE

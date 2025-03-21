@@ -160,15 +160,14 @@ void ui_manage_scan(void *priv)
         if (p_led->power_off != PWM_LED1_FLASH_THREE) {
             pwm_led_mode_set(p_led->power_off);
         } else {
-            // if (sys_ui_var.ui_flash_cnt) {
-            //     if (sys_ui_var.ui_flash_cnt % 2) {
-            //         pwm_led_mode_set(PWM_LED1_OFF);
-            //     } else {
-            //         pwm_led_mode_set(PWM_LED1_ON);
-            //     }
-            // }
-            pwm_led_mode_set(PWM_LED0_ON);
-
+            if (sys_ui_var.ui_flash_cnt) {
+                if (sys_ui_var.ui_flash_cnt > 3) {
+                    pwm_led_mode_set(PWM_LED0_OFF);
+                } else {
+                    pwm_led_mode_set(PWM_LED0_ON);
+                }
+            }
+            // pwm_led_mode_set(PWM_LED0_ON);
         }
         break;
 
