@@ -8,13 +8,10 @@ objs/*
 *.lst
 *.ini
 !isd_config_nor_ota.ini
-*.bin
 !ota.bin
 !nor_ota.bin
 !nor_ota_debug.bin
-*.ufw
 *.zip
-*.fw
 *.resolution.*
 
 app.bin
