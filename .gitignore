@@ -52,10 +52,8 @@ release/
 
 #701watch
 cpu/br28/tools/jl_isd.bin
-cpu/br28/tools/jl_isd.fw
 cpu/br28/tools/json.txt
 cpu/br28/tools/sdk.elf
-cpu/br28/tools/tone.cfg
 cpu/br28/tools/download/watch/res.ori
 cpu/br28/tools/download/watch/ui_upgrade
 cpu/br28/tools/download/watch/app.bin

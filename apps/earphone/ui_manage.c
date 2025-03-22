@@ -161,8 +161,8 @@ void ui_manage_scan(void *priv)
             pwm_led_mode_set(p_led->power_off);
         } else {
             if (sys_ui_var.ui_flash_cnt) {
-                if (sys_ui_var.ui_flash_cnt > 3) {
-                    pwm_led_mode_set(PWM_LED0_OFF);
+                if (sys_ui_var.ui_flash_cnt < 2) {
+                    pwm_led_mode_set(PWM_LED_ALL_OFF);
                 } else {
                     pwm_led_mode_set(PWM_LED0_ON);
                 }

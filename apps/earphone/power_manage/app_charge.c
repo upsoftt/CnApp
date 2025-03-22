@@ -233,8 +233,13 @@ void ldo5v_keep_deal(void)
                 //延时执行避免测试盒通信不上
                 ldo5v_keep_timer = sys_timeout_add(NULL, ldo5v_keep_delay_deal, 250);
             }
-        }else{
-            task_switch_to_bt();
+        }
+        /*入仓自动开机*/
+        else{
+            struct application *app = get_current_app();
+            if (strcmp(app->name, APP_NAME_BT)) {
+                task_switch_to_bt();
+            }
         }
 #else
         ldo5v_keep_delay_deal(NULL);
