@@ -124,6 +124,10 @@ int bt_ota_event_handler(struct bt_event *bt)
         break;
     case OTA_UPDATE_OVER:
         log_info("OTA_UPDATE_OVER\n");
+        __set_disable_sco_flag(0);/*ota完，esco链路建立*/
+        user_send_cmd_prepare(USER_CTRL_CONN_SCO, 0, NULL);/*ota完恢复sco*/
+        user_send_cmd_prepare(USER_CTRL_CONN_A2DP, 0, NULL);/*ota完恢复A2DP*/ 
+
         update_result_set(UPDATA_SUCC);
         dual_bank_passive_update_exit(NULL);
         cpu_reset();
@@ -131,6 +135,9 @@ int bt_ota_event_handler(struct bt_event *bt)
         break;
     case OTA_UPDATE_ERR:
         log_info("OTA_UPDATE_ERR\n");
+        __set_disable_sco_flag(0);/*ota完，esco链路建立*/
+        user_send_cmd_prepare(USER_CTRL_CONN_SCO, 0, NULL);/*ota完恢复sco*/
+        user_send_cmd_prepare(USER_CTRL_CONN_A2DP, 0, NULL);/*ota完恢复A2DP*/ 
         dual_bank_passive_update_exit(NULL);
         //cpu_reset();
         //sys_enter_soft_poweroff((void *)1);
@@ -274,6 +281,9 @@ u16 tws_ota_exit_verify(u8 *res, u8 *up_flg)
 
 int tws_ota_result(u8 result)
 {
+    __set_disable_sco_flag(0);/*ota完，esco链路建立*/
+    user_send_cmd_prepare(USER_CTRL_CONN_SCO, 0, NULL);/*ota完恢复sco*/
+    user_send_cmd_prepare(USER_CTRL_CONN_A2DP, 0, NULL);/*ota完恢复A2DP*/
     if (result == 0) {
         tws_api_sync_call_by_uuid(0xA2E22223, SYNC_CMD_UPDATE_OVER, 400);
     } else {

@@ -107,6 +107,9 @@ void JL_rcsp_update_cmd_resp(void *priv, u8 OpCode, u8 OpCode_SN, u8 *data, u16 
     rcsp_printf("%s\n", __FUNCTION__);
     switch (OpCode) {
     case JL_OPCODE_GET_DEVICE_UPDATE_FILE_INFO_OFFSET:
+        __set_disable_sco_flag(1);/*ota 拒绝esco链路建立*/
+        user_send_cmd_prepare(USER_CTRL_DISCONN_SCO, 0, NULL);/*ota 断开sco*/
+        user_send_cmd_prepare(USER_CTRL_DISCONN_A2DP, 0, NULL);/*ota 断开A2DP*/       
         if (0 == len) {
             msg[0] = OpCode;
             msg[1] = OpCode_SN;
