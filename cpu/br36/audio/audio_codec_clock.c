@@ -300,7 +300,8 @@ clock_set:
     ctx->params.coding_type = coding_type;
     ctx->params.background = params[i].background;
     ctx->params.clk = ctx->params.background ? params[i].clk : new_clk;
-    clk_set("sys", new_clk);
+    //clk_set("sys", new_clk);
+    clk_set("sys", 128000000);
     if (ctx->params.background) {
         list_add_tail(&ctx->entry, &codec_clock_head);
     } else {

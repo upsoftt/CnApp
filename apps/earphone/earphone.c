@@ -73,7 +73,7 @@
 
 
 #define TIMEOUT_CONN_TIME         178 //超时断开之后回连的时间s
-#define POWERON_AUTO_CONN_TIME    12  //开机去回连的时间
+#define POWERON_AUTO_CONN_TIME    8  //开机去回连的时间
 #define TWS_RETRY_CONN_TIMEOUT    ((rand32() & BIT(0)) ? 200 : 400)
 #define PHONE_DLY_DISCONN_TIME    0//4000  //超时断开，快速连接上不播提示音
 
@@ -226,7 +226,8 @@ void bt_send_pair(u8 en)
 {
     user_send_cmd_prepare(USER_CTRL_PAIR, 1, &en);
 }
-
+extern void user_led(void);
+u16 user_led_time = 0;
 void bt_init_ok_search_index(void)
 {
     if (!bt_user_priv_var.auto_connection_counter && get_current_poweron_memory_search_index(bt_user_priv_var.auto_connection_addr)) {
@@ -234,6 +235,8 @@ void bt_init_ok_search_index(void)
         clear_current_poweron_memory_search_index(1);
         bt_user_priv_var.auto_connection_counter = POWERON_AUTO_CONN_TIME * 1000; //8000ms
         EARPHONE_STATE_GET_CONNECT_MAC_ADDR();
+		user_led_time = sys_timeout_add(NULL, user_led, 15000);
+		pwm_led_mode_set(PWM_LED_ALL_OFF);
     }
 }
 
@@ -887,8 +890,8 @@ static void power_off_at_same_time(void *p)
                     bt_tws_play_tone_at_same_time(SYNC_TONE_POWER_OFF, 2400);
                 }
                 sys_timer_del(app_var.wait_exit_timer);
+                } else 
                 task_switch("idle", ACTION_IDLE_POWER_OFF);
-            } else 
 #endif
 						{
 			if(tws_detach_shutdown_time == 0){
@@ -1552,7 +1555,7 @@ static int bt_connction_status_event_handler(struct bt_event *bt)
                 sys_timeout_del(app_var.phone_dly_discon_time);
                 app_var.phone_dly_discon_time = 0;
             } else {
-                app_var.wait_timer_do = sys_timeout_add(NULL, play_bt_connect_dly, 1600);
+                app_var.wait_timer_do = sys_timeout_add(NULL, play_bt_connect_dly, 2000);
                 /* tone_play_index(p_tone->bt_connect_ok, 1); */
             }
         }

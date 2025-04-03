@@ -486,12 +486,12 @@
 //                                  编解码配置(codec)                              //
 //*********************************************************************************//
 /*解码格式使能配置*/
-#define TCFG_DEC_G729_ENABLE                ENABLE	/*format:*.wtg*/
+#define TCFG_DEC_G729_ENABLE                DISABLE	/*format:*.wtg*/
 #define TCFG_DEC_MTY_ENABLE					DISABLE
 #define TCFG_DEC_WTGV2_ENABLE				DISABLE	/*format:*.wts*/
 #define TCFG_DEC_WAV_ENABLE					DISABLE
 #define TCFG_DEC_MP3_ENABLE                 DISABLE
-#define TCFG_DEC_AAC_ENABLE                 DISABLE
+#define TCFG_DEC_AAC_ENABLE                 ENABLE
 #define TCFG_DEC_OPUS_ENABLE                DISABLE
 #define TCFG_DEC_SPEEX_ENABLE               DISABLE
 #define TCFG_DEC_LC3_ENABLE				    DISABLE
@@ -500,7 +500,7 @@
 /*提示音叠加配置*/
 #define TCFG_WAV_TONE_MIX_ENABLE			DISABLE
 #define TCFG_MP3_TONE_MIX_ENABLE			DISABLE
-#define TCFG_WTG_TONE_MIX_ENABLE			ENABLE//DISABLE
+#define TCFG_WTG_TONE_MIX_ENABLE			DISABLE//DISABLE
 #define TCFG_AAC_TONE_MIX_ENABLE			DISABLE //叠加AAC解码需要使用malloc
 #define TCFG_WTS_TONE_MIX_ENABLE			DISABLE
 
@@ -888,17 +888,17 @@
 //*********************************************************************************//
 //                                 时钟切换配置                                    //
 //*********************************************************************************//
-#define CONFIG_BT_NORMAL_HZ	            (24 * 1000000L)
-#define CONFIG_BT_CONNECT_HZ            (48 * 1000000L)
+#define CONFIG_BT_NORMAL_HZ	            (128 * 1000000L)
+#define CONFIG_BT_CONNECT_HZ            (128 * 1000000L)
 
 #if TCFG_BT_MUSIC_EQ_ENABLE
-#define CONFIG_BT_A2DP_HZ	        	(96 * 1000000L)
+#define CONFIG_BT_A2DP_HZ	        	(128 * 1000000L)
 #else
-#define CONFIG_BT_A2DP_HZ	        	(48 * 1000000L)
+#define CONFIG_BT_A2DP_HZ	        	(128 * 1000000L)
 #endif
 
-#define CONFIG_MUSIC_DEC_CLOCK			(48 * 1000000L)
-#define CONFIG_MUSIC_IDLE_CLOCK		    (48 * 1000000L)
+#define CONFIG_MUSIC_DEC_CLOCK			(128 * 1000000L)
+#define CONFIG_MUSIC_IDLE_CLOCK		    (128 * 1000000L)
 
 /*以下情况需要提高通话系统时钟：
  *(1)使能通话下行降噪
@@ -906,17 +906,17 @@
  */
 #if (TCFG_ESCO_DL_NS_ENABLE ||  \
 	(defined TCFG_AUDIO_CVP_CODE_AT_RAM && (TCFG_AUDIO_CVP_CODE_AT_RAM == 0)))
-#define CONFIG_BT_CALL_HZ		        (60 * 1000000L)
-#define CONFIG_BT_CALL_ADVANCE_HZ       (80 * 1000000L)
-#define CONFIG_BT_CALL_16k_HZ	        (80 * 1000000L)
-#define CONFIG_BT_CALL_16k_ADVANCE_HZ   (96 * 1000000L)
+#define CONFIG_BT_CALL_HZ		        (128 * 1000000L)
+#define CONFIG_BT_CALL_ADVANCE_HZ       (128 * 1000000L)
+#define CONFIG_BT_CALL_16k_HZ	        (128 * 1000000L)
+#define CONFIG_BT_CALL_16k_ADVANCE_HZ   (128 * 1000000L)
 #else
-#define CONFIG_BT_CALL_HZ		        (48 * 1000000L)
-#define CONFIG_BT_CALL_ADVANCE_HZ       (60 * 1000000L)
-#define CONFIG_BT_CALL_16k_HZ	        (70 * 1000000L)
-#define CONFIG_BT_CALL_16k_ADVANCE_HZ   (80 * 1000000L)
+#define CONFIG_BT_CALL_HZ		        (128 * 1000000L)
+#define CONFIG_BT_CALL_ADVANCE_HZ       (128 * 1000000L)
+#define CONFIG_BT_CALL_16k_HZ	        (128 * 1000000L)
+#define CONFIG_BT_CALL_16k_ADVANCE_HZ   (128 * 1000000L)
 #endif/*TCFG_ESCO_DL_NS_ENABLE*/
-#define CONFIG_BT_CALL_DNS_HZ           (96 * 1000000L)
+#define CONFIG_BT_CALL_DNS_HZ           (128 * 1000000L)
 
 //*********************************************************************************//
 //                               第三方音效算法配置                                //
@@ -940,7 +940,7 @@
 ////充电拔出开机提示音////
 #define TONE_PLAY_CHARGE_OFF_POWERON_NE			
 
-#define UPDATA_OK_SOFT_PWROFF_EN
+// #define UPDATA_OK_SOFT_PWROFF_EN                0
 #define EARPHONE_POWEROFF_CTRL_EN               1   //手动关机功能
 #define EARPHONE_POWERON_CTRL_EN                1   //手动开机功能
 

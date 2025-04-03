@@ -302,12 +302,12 @@ SECTIONS
 		.overlay_aac
 		{
 #if TCFG_AUDIO_AAC_CODE_AT_RAM
-			. = ALIGN(4);
-			aac_dec_code_begin = .;
-			*(.bt_aac_dec_code)
-            *(.bt_aac_dec_sparse_code)
-			aac_dec_code_end = .;
-			aac_dec_code_size  = aac_dec_code_end - aac_dec_code_begin ;
+			//. = ALIGN(4);
+			//aac_dec_code_begin = .;
+			//*(.bt_aac_dec_code)
+           // *(.bt_aac_dec_sparse_code)
+			//aac_dec_code_end = .;
+			//aac_dec_code_size  = aac_dec_code_end - aac_dec_code_begin ;
 
 			. = ALIGN(4);
 			bt_aac_dec_const_begin = .;
@@ -644,8 +644,16 @@ SECTIONS
 #if !AUDIO_CVP_CODE_COMMON_AT_RAM
             *(.opcore_maskrom)
 #endif/*AUDIO_CVP_CODE_COMMON_AT_RAM*/
-			aec_code_end = . ;
+			aec_code_end = . ; 
 			aec_code_size = aec_code_end - aec_code_begin ;
+
+
+. = ALIGN(4);
+aac_dec_code_begin = .;
+*(.bt_aac_dec_code)
+*(.bt_aac_dec_sparse_code)
+aac_dec_code_end = .;
+aac_dec_code_size  = aac_dec_code_end - aac_dec_code_begin ;
 
 #if (TCFG_AUDIO_AAC_CODE_AT_RAM == 0)
 			. = ALIGN(4);

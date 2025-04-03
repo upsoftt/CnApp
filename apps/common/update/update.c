@@ -240,13 +240,15 @@ int update_result_deal()
         if (key_voice_cnt > voice_max_cnt) {
             key_voice_cnt = 0;
 #ifndef UPDATA_OK_SOFT_PWROFF_EN
+            cpu_reset();
             puts("enter_sys_soft_poweroff\n");
             break;
 #else
             //注:关机要慎重,要设置开机键
             // enter_sys_soft_poweroff();
-            extern void power_set_soft_poweroff();
-            power_set_soft_poweroff();
+            cpu_reset();
+            // extern void power_set_soft_poweroff();
+            // power_set_soft_poweroff();
 #endif
         }
     }

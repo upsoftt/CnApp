@@ -60,6 +60,27 @@ u8 adv_get_led_status(void)
     return sys_ui_var.other_status;
 }
 #endif
+#include "btstack/avctp_user.h"
+
+extern u16 user_led_time;
+void user_led(void)
+{
+    user_led_time = 0;
+    if(get_bt_connect_status() >= BT_STATUS_CONNECTING){
+        pwm_led_mode_set(PWM_LED_ALL_OFF);
+	} else {
+        if (get_bt_tws_connect_status()) {
+	        if(tws_api_get_role() == TWS_ROLE_MASTER) {
+	            pwm_led_mode_set(tws_self_state);
+	        } else {
+	            pwm_led_mode_set(tws_another_state);
+	        }
+	    } else {
+	        pwm_led_mode_set(tws_self_state);
+	    }
+	}
+    
+}
 
 void ui_manage_scan(void *priv)
 {
@@ -173,20 +194,31 @@ void ui_manage_scan(void *priv)
 
     case STATUS_BT_INIT_OK:
         log_info("[STATUS_BT_INIT_OK]\n");
+		if(user_led_time){
+            break;
+		}
         pwm_led_mode_set(p_led->bt_init_ok);
         break;
 
     case STATUS_BT_SLAVE_CONN_MASTER:
+		if(user_led_time){
+            break;
+		}
         pwm_led_mode_set(PWM_LED1_SLOW_FLASH);
         break;
 
     case STATUS_BT_CONN:
         log_info("[STATUS_BT_CONN]\n");
         pwm_led_mode_set(p_led->bt_connect_ok);
+		sys_timeout_del(user_led_time);
+		user_led_time = 0;
         break;
 
     case STATUS_BT_MASTER_CONN_ONE:
         log_info("[STATUS_BT_MASTER_CONN_ONE]\n");
+		if(user_led_time){
+            break;
+		}
         pwm_led_mode_set(PWM_LED0_LED1_SLOW_FLASH);
         break;
 
@@ -241,6 +273,9 @@ void ui_manage_scan(void *priv)
 
     case STATUS_BT_TWS_CONN:
         log_info("[STATUS_BT_TWS_CONN]\n");
+		if(user_led_time){
+            break;
+		}
 #if DISTINGUISH_UI
 #if DISTINGUISH_LEFT_RIGHT
         if (get_bt_tws_connect_status()) {
@@ -269,6 +304,9 @@ void ui_manage_scan(void *priv)
         break;
     case STATUS_BT_TWS_DISCONN:
         log_info("[STATUS_BT_TWS_DISCONN]\n");
+		if(user_led_time){
+            break;
+		}
         pwm_led_mode_set(p_led->tws_disconnect);
         break;
     }

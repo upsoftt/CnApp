@@ -258,10 +258,6 @@ msbc_decoder
 sbc_hwaccel
 cvsd_decoder
 pcm_decoder
-g729_decoder
-
-
-
 aac_decoder
 cvsd_encoder
 msbc_encoder
@@ -732,91 +728,13 @@ SECTIONS
   {
             . = ALIGN(4);
    aec_code_begin = . ;
-
-   *(.text._*)
-
-
-   *(.nlp_code)
-   *(.nlp_const)
-            *(.jlsp_nlp_code)
-            *(.jlsp_nlp_const)
-
-
-   *(.aec_code)
-   *(.aec_const)
-            *(.jlsp_aec_code)
-            *(.jlsp_aec_const)
-
-
-   *(.res_code)
-   *(.res_const)
-
             . = ALIGN(4);
-
-            *(.dns_common_data)
-            *(.dns_param_data_single)
-            *(.dns_param_data_dual)
-
-
-   *(.ns_code)
-   *(.ns_const)
-
-
-   *(.fft_code)
-   *(.fft_const)
-   *(.der_code)
-   *(.der_const)
-   *(.qmf_code)
-   *(.qmf_const)
-            *(.jlsp_prep_code)
-            *(.jlsp_prep_const)
-
-
-   *(.dms_code)
-   *(.dms_const)
-            *(.jlsp_enc_code)
-            *(.jlsp_enc_const)
-
-
-            *(.jlsp_wn_code)
-            *(.jlsp_wn_const)
-
-
-   *(.agc_code)
-
-
-            *(.opcore_maskrom)
-   *(.cvp_dev_overlay_mem)
-
    aec_code_end = . ;
    aec_code_size = aec_code_end - aec_code_begin ;
   }
 
   .overlay_aac
   {
-
-   . = ALIGN(4);
-   aac_dec_code_begin = .;
-   *(.bt_aac_dec_code)
-            *(.bt_aac_dec_sparse_code)
-   aac_dec_code_end = .;
-   aac_dec_code_size = aac_dec_code_end - aac_dec_code_begin ;
-
-   . = ALIGN(4);
-   bt_aac_dec_const_begin = .;
-   *(.bt_aac_dec_const)
-            *(.bt_aac_dec_sparse_const)
-   . = ALIGN(4);
-   bt_aac_dec_const_end = .;
-   bt_aac_dec_const_size = bt_aac_dec_const_end - bt_aac_dec_const_begin ;
-   *(.bt_aac_dec_data)
-   LONG(0xFFFFFFFF);
-   . = ALIGN(4);
-   *(.bt_aac_dec_bss)
-   . = ALIGN(4);
-   *(.aac_mem)
-   *(.aac_ctrl_mem)
-
   }
      } > ram0
 
@@ -1419,9 +1337,90 @@ SECTIONS
   . = ALIGN(4);
             . = ALIGN(4);
    aec_code_begin = . ;
+
+   *(.text._*)
+
+
+   *(.aec_code)
+   *(.aec_const)
+            *(.jlsp_aec_code)
+            *(.jlsp_aec_const)
+
+
+   *(.nlp_code)
+   *(.nlp_const)
+            *(.jlsp_nlp_code)
+            *(.jlsp_nlp_const)
+
+
+   *(.res_code)
+   *(.res_const)
+
             . = ALIGN(4);
+
+            *(.dns_common_data)
+            *(.dns_param_data_single)
+            *(.dns_param_data_dual)
+
+
+   *(.ns_code)
+   *(.ns_const)
+
+
+   *(.fft_code)
+   *(.fft_const)
+   *(.der_code)
+   *(.der_const)
+   *(.qmf_code)
+   *(.qmf_const)
+            *(.jlsp_prep_code)
+            *(.jlsp_prep_const)
+
+
+   *(.dms_code)
+   *(.dms_const)
+            *(.jlsp_enc_code)
+            *(.jlsp_enc_const)
+
+
+            *(.jlsp_wn_code)
+            *(.jlsp_wn_const)
+
+
+   *(.agc_code)
+
+
+            *(.opcore_maskrom)
+
    aec_code_end = . ;
    aec_code_size = aec_code_end - aec_code_begin ;
+
+
+. = ALIGN(4);
+aac_dec_code_begin = .;
+*(.bt_aac_dec_code)
+*(.bt_aac_dec_sparse_code)
+aac_dec_code_end = .;
+aac_dec_code_size = aac_dec_code_end - aac_dec_code_begin ;
+
+
+   . = ALIGN(4);
+   aac_dec_code_begin = .;
+   *(.bt_aac_dec_code)
+            *(.bt_aac_dec_sparse_code)
+   aac_dec_code_end = .;
+   aac_dec_code_size = aac_dec_code_end - aac_dec_code_begin ;
+
+   . = ALIGN(4);
+   bt_aac_dec_const_begin = .;
+   *(.bt_aac_dec_const)
+            *(.bt_aac_dec_sparse_const)
+   . = ALIGN(4);
+   bt_aac_dec_const_end = .;
+   bt_aac_dec_const_size = bt_aac_dec_const_end - bt_aac_dec_const_begin ;
+   *(.bt_aac_dec_data)
+   . = ALIGN(4);
+
         MEDIA_CODE_SIZE = . - MEDIA_CODE_BEGIN;
 
 

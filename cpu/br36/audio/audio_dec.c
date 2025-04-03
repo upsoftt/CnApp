@@ -197,6 +197,10 @@ struct a2dp_dec_hdl {
     int pkt_frames;
 };
 
+
+
+
+
 #if AUDIO_SURROUND_CONFIG
 static u8 a2dp_surround_eff;  //音效模式记录
 void a2dp_surround_set(u8 eff)
@@ -204,6 +208,32 @@ void a2dp_surround_set(u8 eff)
     a2dp_surround_eff = eff;
 }
 #endif
+
+int AptFilt_QueryBufSize(int M, int B)
+{
+}
+int AptFilt_QueryTempBufSize(int M, int B)
+{
+}
+void AptFilt_Init(void *AptFilRunBuffer,
+int M,
+int B,
+float ConverThr,
+float RefEngThr,
+float DT_AggressiveFactor) //DT = Double Talk; Bigger to trace better,but will be unstable,range = 1 ~ 5
+{
+}
+void AptFilt_Process(void *AptFilRunBuffer,
+void *AptFilTempBuffer,
+short *far,
+short *near,
+short *output,
+int npoint) //npoint must be multiply of 64
+{
+}
+void AptFilt_Config(void *AptFilRunBuffer, int ConfigType, int *ConfigData)
+{
+}
 
 
 struct esco_dec_hdl {

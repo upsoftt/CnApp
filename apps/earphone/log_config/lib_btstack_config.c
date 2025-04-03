@@ -64,11 +64,11 @@ const int config_le_gatt_client_num = 0;   //支持client角色个数
 const int config_le_gatt_server_num = 1;   //支持server角色个数
 #else
 const int config_le_gatt_server_num = 1;   //支持server角色个数
-const int config_le_gatt_client_num = 1;   //支持client角色个数
+const int config_le_gatt_client_num = 0;   //支持client角色个数
 #endif
 
 
-#if  TCFG_BLE_BRIDGE_EDR_ENALBE
+#if  0//TCFG_BLE_BRIDGE_EDR_ENALBE
 const int config_le_sm_sub_sc_enable = 1;            /*SC加密模式使能,need config_le_sm_support_enable = 1*/
 const int config_le_sm_sub_sc_bridge_edr_enable = 1; /*SC加密模式下,ios app ble配对快连edr,need config_le_sm_sub_sc_enable = 1*/
 #else

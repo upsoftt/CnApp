@@ -237,8 +237,10 @@ void ldo5v_keep_deal(void)
         /*入仓自动开机*/
         else{
             struct application *app = get_current_app();
-            if (strcmp(app->name, APP_NAME_BT)) {
-                task_switch_to_bt();
+            if (strcmp(app->name, APP_NAME_BT) && strcmp(app->name, APP_NAME_POWER_ON)) {
+                // task_switch_to_bt();
+                task_switch(APP_NAME_POWER_ON, ACTION_POWER_ON_MAIN);
+
             }
         }
 #else
@@ -564,7 +566,7 @@ void charge_ldo5v_off_deal(void)
             vbat_check_init();
 #endif
             if (app && (app_var.goto_poweroff_flag == 0)) {
-                if (strcmp(app->name, APP_NAME_BT)) {
+                if (strcmp(app->name, APP_NAME_BT)  && strcmp(app->name, APP_NAME_POWER_ON)) {
 #if TCFG_SYS_LVD_EN
                     if (get_vbat_need_shutdown() == FALSE) {
 #if TCFG_WIRELESS_MIC_ENABLE

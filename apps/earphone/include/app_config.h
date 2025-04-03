@@ -251,9 +251,9 @@
 #define CONFIG_TWS_EXTERN_DOWN_AS_LEFT        6 //外部有下拉电阻作为左耳
 #define CONFIG_TWS_SECECT_BY_CHARGESTORE      7 //充电仓决定左右耳
 
-#define CONFIG_TWS_CHANNEL_SELECT             CONFIG_TWS_MASTER_AS_LEFT      //配对方式选择
+#define CONFIG_TWS_CHANNEL_SELECT             CONFIG_TWS_EXTERN_DOWN_AS_LEFT      //配对方式选择
 
-#define CONFIG_TWS_CHANNEL_CHECK_IO           IO_PORTA_07					//上下拉电阻检测引脚
+#define CONFIG_TWS_CHANNEL_CHECK_IO           IO_PORTB_02					//上下拉电阻检测引脚
 
 
 #if CONFIG_TWS_PAIR_MODE != CONFIG_TWS_PAIR_BY_CLICK
@@ -517,7 +517,7 @@
 //升级LED显示使能
 #define UPDATE_LED_REMIND
 //升级提示音使能
-#define UPDATE_VOICE_REMIND
+// #define UPDATE_VOICE_REMIND
 
 #ifndef CONFIG_UPDATE_JUMP_TO_MASK
 #define CONFIG_UPDATE_JUMP_TO_MASK 	0
@@ -543,7 +543,7 @@
 #endif/*(SYS_VOL_TYPE = VOL_TYPE_ANALOG) || (SYS_VOL_TYPE = VOL_TYPE_AD)*/
 #endif/*TCFG_AUDIO_ANC_ENABLE*/
 
-#if TCFG_ANC_EXPORT_RAM_EN
+#if 1//TCFG_ANC_EXPORT_RAM_EN
 /*通话语音处理算法放text段(flash)*/
 #define AUDIO_CVP_CODE_AEC_AT_RAM		0
 #define AUDIO_CVP_CODE_NLP_AT_RAM		0
@@ -560,7 +560,7 @@
 #define AUDIO_CVP_CODE_AEC_AT_RAM		1	//AEC 	     双麦 - 3k   单麦 - 0.3k
 #define AUDIO_CVP_CODE_NLP_AT_RAM		1   //NLP
 #define AUDIO_CVP_CODE_NS_AT_RAM		1	//ANS/下行降噪      1.1k
-#define AUDIO_CVP_CODE_DNS_AT_RAM		1	//DNS               20.4k
+#define AUDIO_CVP_CODE_DNS_AT_RAM		0	//DNS               20.4k
 #define AUDIO_CVP_CODE_WIND_AT_RAM		1   //WIND
 #define AUDIO_CVP_CODE_DMS_AT_RAM		1	//双麦DMS           3.2k
 #define AUDIO_CVP_CODE_AGC_AT_RAM		1	//AGC               0.6k
@@ -571,7 +571,7 @@
 
 /*AAC解码算法放在.data段*/
 #ifndef TCFG_AUDIO_AAC_CODE_AT_RAM
-#define TCFG_AUDIO_AAC_CODE_AT_RAM		1
+#define TCFG_AUDIO_AAC_CODE_AT_RAM		0
 #endif/*TCFG_AUDIO_AAC_CODE_AT_RAM*/
 
 #if (defined(CONFIG_CPU_BR36))

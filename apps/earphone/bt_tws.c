@@ -1141,9 +1141,8 @@ int bt_tws_phone_connected()
             (get_call_status() != BT_CALL_HANGUP)) {
             return 1;
         }
-
-        log_info("[SYNC] TONE SYNC");
-        bt_tws_play_tone_at_same_time(SYNC_TONE_PHONE_CONNECTED, 1200);
+        log_info("bt_tws_phone_connected [SYNC] TONE SYNC");
+        bt_tws_play_tone_at_same_time(SYNC_TONE_PHONE_CONNECTED, 2000);
     }
 
     return 1;
