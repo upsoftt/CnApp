@@ -238,8 +238,8 @@ void ldo5v_keep_deal(void)
         else{
             struct application *app = get_current_app();
             if (strcmp(app->name, APP_NAME_BT) && strcmp(app->name, APP_NAME_POWER_ON)) {
-                // task_switch_to_bt();
-                task_switch(APP_NAME_POWER_ON, ACTION_POWER_ON_MAIN);
+                task_switch_to_bt();
+                // task_switch(APP_NAME_POWER_ON, ACTION_POWER_ON_MAIN);
 
             }
         }
@@ -572,9 +572,9 @@ void charge_ldo5v_off_deal(void)
 #if TCFG_WIRELESS_MIC_ENABLE
                         cpu_reset();
 #endif
-                        // task_switch_to_bt(); /*出仓切换到power on线程*/
+                        task_switch_to_bt(); /*出仓切换到power on线程*/
                         ui_update_status(STATUS_POWERON);
-                        task_switch(APP_NAME_POWER_ON, ACTION_POWER_ON_MAIN);
+                        // task_switch(APP_NAME_POWER_ON, ACTION_POWER_ON_MAIN);
                     } else {
                         log_info("ldo5v off,lowpower,need enter softpoweroff\n");
                         power_set_soft_poweroff();

@@ -6,6 +6,8 @@
         "adv_hearing_aid_setting.h": "c",
         "app_protocol_event.h": "c",
         "rcsp_adv_opt.h": "c",
-        "log.h": "c"
+        "log.h": "c",
+        "le_rcsp_adv_module.h": "c",
+        "debug.h": "c"
     }
 }

@@ -668,9 +668,16 @@ int eq_init(void)
 }
 __initcall(eq_init);
 
-static u8 user_eq_mode = 0;
+static u8 user_eq_mode;
 u8 get_eq_mode()
 {
+    
+    syscfg_read(CFG_EQ_MODE, &user_eq_mode, sizeof(user_eq_mode));
+    printf("sylon debug:user_eq_mode : %d\n", user_eq_mode);
+
+    if (user_eq_mode >= get_eq_mode_max()) {
+        user_eq_mode = 0;
+    }
     return user_eq_mode;
 }
 
@@ -679,7 +686,7 @@ u8 get_eq_mode()
 void eq_file_set_by_index(u8 index)
 {
     if (index >= ARRAY_SIZE(eq_file_switch_list)) {
-        printf("err, max index %d\n", ARRAY_SIZE(eq_file_switch_list));
+    printf("err, max index %d\n", ARRAY_SIZE(eq_file_switch_list));
         return;
     }
     EQ_CFG *eq_cfg = get_eq_cfg_hdl();
@@ -687,8 +694,12 @@ void eq_file_set_by_index(u8 index)
         return;
     }
     user_eq_mode = index;
+    syscfg_write(CFG_EQ_MODE, &user_eq_mode, sizeof(user_eq_mode));
     int ret = eq_file_get_cfg(eq_cfg, eq_file_switch_list[index]);
-    printf("eq_file_switch : %d, ret : %d", index, ret);
+    printf("eq_file_switch : %d, ret : %d sizeof(user_eq_mode) %d ", index, ret,sizeof(user_eq_mode));
+    // static u8 temp = 0;
+    // syscfg_read(CFG_EQ_MODE, &temp, 1);
+    // printf("sylon debug:syscfg_read CFG_EQ_MODE : %d\n", temp);
 }
 
 //根据eq_file_switch_list成员个数顺序切换eq文件

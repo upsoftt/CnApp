@@ -397,15 +397,18 @@ int app_earphone_key_event_handler(struct sys_event *event)
                     user_send_cmd_prepare(USER_CTRL_HFP_CALL_HANGUP, 0, NULL);
                 }
                 break;
+            case KEY_EVENT_UP:
+                printf(" KEY_EVENT_UP\n");
+                    key_long_cnt = 0;
+                break;
             case KEY_EVENT_HOLD:
                 printf(">>>>>>>> siri  KEY_EVENT_HOLD\n");
-                if(key_long_cnt <= 10){
+                if(key_long_cnt <= 250){
                     key_long_cnt++;
                 }
-                else{
+                if(key_long_cnt == 10){
                     printf("sylon debug : open siri >>>>>>>>>>>>>>>>>>> key_long_cnt = %d",key_long_cnt);
                     user_send_cmd_prepare(USER_CTRL_HFP_GET_SIRI_OPEN, 0, NULL);
-                    key_long_cnt = 0;
                 }
                 break;
                 return 0;
@@ -753,7 +756,8 @@ int app_earphone_key_event_handler(struct sys_event *event)
 
         break;
     case  KEY_OPEN_SIRI:
-        
+        printf("sylon debug : KEY_OPEN_SIRI >>>>>>>>>>>>>>>>>>> __LINE__ = %d",__LINE__);
+        user_send_cmd_prepare(USER_CTRL_HFP_GET_SIRI_OPEN, 0, NULL);
         break;
     case  KEY_EQ_MODE:
 #if(TCFG_EQ_ENABLE == 1)

@@ -235,7 +235,7 @@
 #define CONFIG_TWS_PAIR_MODE           CONFIG_TWS_PAIR_BY_AUTO /*注意:自动配对或者按键配对开启, 可能会产生生产线混配情况，
 																  也就是客户反馈调配对，产线最好是通过是测试盒串口配对,TCFG_TEST_BOX_ENABLE,默认取消按键配对,已拦截*/
 
-#define  CONFIG_DEVELOPER_MODE                0 //开发者模式debug ,开启后可以进行按键双击配对
+#define  CONFIG_DEVELOPER_MODE                1 //开发者模式debug ,开启后可以进行按键双击配对
 
 #define ESCO_AUTO_POWER_BALANCE_ROLE_SWITCH_ENABLE    0  /*通话过程根据电量主从切换，电量平衡*/
 #define A2DP_PLAY_AUTO_ROLE_SWITCH_ENABLE             1  /*播歌根据主从信号质量自动主从切换*/
@@ -251,7 +251,7 @@
 #define CONFIG_TWS_EXTERN_DOWN_AS_LEFT        6 //外部有下拉电阻作为左耳
 #define CONFIG_TWS_SECECT_BY_CHARGESTORE      7 //充电仓决定左右耳
 
-#define CONFIG_TWS_CHANNEL_SELECT             CONFIG_TWS_EXTERN_DOWN_AS_LEFT      //配对方式选择
+#define CONFIG_TWS_CHANNEL_SELECT             CONFIG_TWS_MASTER_AS_LEFT      //配对方式选择
 
 #define CONFIG_TWS_CHANNEL_CHECK_IO           IO_PORTB_02					//上下拉电阻检测引脚
 

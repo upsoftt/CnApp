@@ -80,3 +80,5 @@ cpu/br28/tools/usrmaketimer.txt
 sdk/cpu/br28/tools/download/watch/new_re2.bin
 sdk/cpu/br28/tools/usrmaketimer.txt
 sdk/cpu/br28/tools/download/watch/res2.bin
+.vscode/settings.json
+cpu/br36/tools/data_code.bin

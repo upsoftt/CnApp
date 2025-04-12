@@ -10,7 +10,7 @@
 
 #define		CFG_MIC_ARRAY_DIFF_CMP_VALUE     3//麦克风补偿值
 #define		CFG_MIC_ARRAY_TRIM_EN		     4//麦克风补偿使能
-
+#define     CFG_EQ_MODE                      5
 #define     TUYA_SYNC_KEY_INFO              20
 #define     CFG_USER_TUYA_INFO_AUTH         21
 #define     CFG_USER_TUYA_INFO_AUTH_BK      22

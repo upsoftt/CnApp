@@ -1142,7 +1142,7 @@ int bt_tws_phone_connected()
             return 1;
         }
         log_info("bt_tws_phone_connected [SYNC] TONE SYNC");
-        bt_tws_play_tone_at_same_time(SYNC_TONE_PHONE_CONNECTED, 2000);
+        bt_tws_play_tone_at_same_time(SYNC_TONE_PHONE_CONNECTED, 1200);
     }
 
     return 1;
@@ -1696,7 +1696,7 @@ int bt_tws_connction_status_event_handler(struct bt_event *evt)
                         gtws.state |= BT_TWS_DISCON_DLY_TIMEOUT_NO_CONN;
                     }
                 } else {
-                    tone_play_index(p_tone->tws_disconnect, 1);
+                    tone_play_index(p_tone->tws_disconnect, 1); 
                 }
             }
 #else

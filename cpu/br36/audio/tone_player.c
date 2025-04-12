@@ -1748,7 +1748,10 @@ int tone_play(const char *name, u8 preemption)
 #endif /*TCFG_AUDIO_HEARING_AID_ENABLE && TCFG_AUDIO_DHA_FITTING_ENABLE*/
 
     g_printf("tone_play:%s,preemption:%d", IS_DEFAULT_SINE(name) ? "sine" : name, preemption);
-
+    // if(JL_rcsp_update_get_audio_mute()) {
+    //     g_printf("tone_play:rcsp update mute");
+    //     return 0;
+    // }
     if (strcmp(os_current_task(), "app_core") != 0) {
         g_printf("Tone play not in right task.");
 

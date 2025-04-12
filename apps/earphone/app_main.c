@@ -272,7 +272,7 @@ void app_main()
         wireless_mic_main_run();
 #endif
 
-#if 1 /*增加开机提示音任务*/
+#if 0 /*增加开机提示音任务*/
         init_intent(&it);
         it.name = APP_NAME_POWER_ON;
         it.action = ACTION_POWER_ON_MAIN;
@@ -296,10 +296,10 @@ void app_main()
         start_app(&it);
         app_curr_task = APP_LINEIN_TASK;
 #else
-        // init_intent(&it);
-        // it.name = "earphone";
-        // it.action = ACTION_EARPHONE_MAIN;
-        // start_app(&it);
+        init_intent(&it);
+        it.name = "earphone";
+        it.action = ACTION_EARPHONE_MAIN;
+        start_app(&it);
 #endif
     }
 

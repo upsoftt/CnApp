@@ -36,6 +36,6 @@ del jl_isd.ufw
 @rem -format vm        //����VM ����
 @rem -format cfg       //����BT CFG ����
 @rem -format 0x3f0-2   //��ʾ�ӵ� 0x3f0 �� sector ��ʼ�������� 2 �� sector(��һ������Ϊ16���ƻ�10���ƶ��ɣ��ڶ�������������10����)
-z_name
+@REM z_name
 ping /n 2 127.1>null
 IF EXIST null del null

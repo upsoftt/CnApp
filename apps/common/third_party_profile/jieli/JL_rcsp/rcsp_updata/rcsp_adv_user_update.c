@@ -100,6 +100,11 @@ static void ble_discon_timeout_handle(void *priv)
 {
     JL_rcsp_event_to_user(DEVICE_EVENT_FROM_RCSP, MSG_JL_UPDATE_START, NULL, 0);
 }
+// static u8 audio_mute_state = 0;
+// u8 JL_rcsp_update_get_audio_mute()
+// {
+//     return audio_mute_state;  
+// }
 
 void JL_rcsp_update_cmd_resp(void *priv, u8 OpCode, u8 OpCode_SN, u8 *data, u16 len)
 {
@@ -109,7 +114,10 @@ void JL_rcsp_update_cmd_resp(void *priv, u8 OpCode, u8 OpCode_SN, u8 *data, u16 
     case JL_OPCODE_GET_DEVICE_UPDATE_FILE_INFO_OFFSET:
         __set_disable_sco_flag(1);/*ota 拒绝esco链路建立*/
         user_send_cmd_prepare(USER_CTRL_DISCONN_SCO, 0, NULL);/*ota 断开sco*/
-        user_send_cmd_prepare(USER_CTRL_DISCONN_A2DP, 0, NULL);/*ota 断开A2DP*/       
+        user_send_cmd_prepare(USER_CTRL_DISCONN_A2DP, 0, NULL);/*ota 断开A2DP*/ 
+        // extern void app_audio_mute(u8 value);
+        // app_audio_mute(0);/*ota静音*/
+        // audio_mute_state = 1;
         if (0 == len) {
             msg[0] = OpCode;
             msg[1] = OpCode_SN;
@@ -415,7 +423,7 @@ void JL_rcsp_msg_deal(void *hdl, u8 event, u8 *msg)
         break;
 
     case MSG_JL_INQUIRE_DEVEICE_IF_CAN_UPDATE:
-        rcsp_printf("MSG_JL_INQUIRE_DEVEICE_IF_CAN_UPDATE\n");
+        rcsp_printf("MSG_JL_INQUIRE_DEVEICE_IF_CAN_UPDATE\n"); 
 #if 0
         remote_file_version = READ_BIG_U16(update_file_id_info.update_file_id_info.ver);
         rcsp_printf("remote_file_ver:V%d.%d.%d.%d\n",

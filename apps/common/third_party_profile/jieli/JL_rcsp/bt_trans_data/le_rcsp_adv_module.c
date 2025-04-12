@@ -694,7 +694,16 @@ void app_set_low_latency_mode(u8 *buffer, u8 buffer_size)
     buf[1] = buffer[1]; /*spp和ble的区分返回给客户*/
     buf[7] = buffer[7];
     buf[6] = buffer[6];
-    if((1 == buffer[9] && buffer[1] == 0) || (0 == buffer[9] && buffer[1] == 1)){/*安卓和ios设置的值是反的*/
+    // if((1 == buffer[9] && buffer[1] == 0) || (0 == buffer[9] && buffer[1] == 1)){/*安卓和ios设置的值是反的*/
+    //     bt_set_low_latency_mode(ENABLE);
+    //     log_info("s12 app_set_low_latency_mode on \n");
+    // }
+    // else{
+    //     bt_set_low_latency_mode(DISABLE);
+    //     log_info("s12 app_set_low_latency_mode off \n");
+    // }
+    if(1 == buffer[9]) /*万魔要求改为直接设置低延迟模式*/
+    {
         bt_set_low_latency_mode(ENABLE);
         log_info("s12 app_set_low_latency_mode on \n");
     }
@@ -713,13 +722,15 @@ void app_get_low_latency_mode(u8 *buffer, u8 buffer_size)
     buf[1] = buffer[1]; /*spp和ble的区分返回给客户*/
     buf[7] = buffer[7];
     buf[6] = buffer[6];
-    if(1 == buffer[1]) {/*安卓和ios设置的值是反的*/
-        buf[9] = !bt_get_low_latency_mode();
-        log_info("s12 spp return value buf[9] = %d \n",buf[9]);
-    }else if(0 == buffer[1]){
-        buf[9] = bt_get_low_latency_mode();
-        log_info("s12 ble return value buf[9] = %d \n",buf[9]);
-    }
+    // if(1 == buffer[1]) {/*安卓和ios设置的值是反的*/
+    //     buf[9] = !bt_get_low_latency_mode();
+    //     log_info("s12 spp return value buf[9] = %d \n",buf[9]);
+    // }else if(0 == buffer[1]){
+    //     buf[9] = bt_get_low_latency_mode();
+    //     log_info("s12 ble return value buf[9] = %d \n",buf[9]);
+    // }
+    buf[9] = bt_get_low_latency_mode();
+    log_info("s12 ble return value buf[9] = %d \n",buf[9]);
 	log_info("s12 bt_get_low_latency_mode %d len %d \n",buffer[9],sizeof(buf)/sizeof(buf[0]));
     user_send_data(buf,sizeof(buf)/sizeof(buf[0]));
 }

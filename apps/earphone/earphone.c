@@ -73,7 +73,7 @@
 
 
 #define TIMEOUT_CONN_TIME         178 //超时断开之后回连的时间s
-#define POWERON_AUTO_CONN_TIME    8  //开机去回连的时间
+#define POWERON_AUTO_CONN_TIME    12  //开机去回连的时间
 #define TWS_RETRY_CONN_TIMEOUT    ((rand32() & BIT(0)) ? 200 : 400)
 #define PHONE_DLY_DISCONN_TIME    0//4000  //超时断开，快速连接上不播提示音
 
@@ -1375,6 +1375,31 @@ u8 fre_offset_read_handle(s32 *fre)
     return len;
 }
 
+static u8 phone_answer_setup_esco=0;
+static u32 active_time=0;
+void app_ear_detect_phone_active_deal()
+{
+    if (get_remote_dev_company() == 2) {    ////IOS就处理
+        printf("ios, phone active, esco:%d", bt_phone_dec_is_running());
+        if (bt_phone_dec_is_running()) { //esco还没关闭，等关闭时再打开
+            phone_answer_setup_esco = 1;
+            active_time = jiffies_msec();
+        } else { //esco已经关闭，建立连接
+            user_send_cmd_prepare(USER_CTRL_CONN_SCO, 0, NULL);
+        }
+    }
+}
+void waiting_esco_timerout(void)
+{
+    if(phone_answer_setup_esco){
+        phone_answer_setup_esco =0;
+        if((jiffies_msec() - active_time) < 1000){
+            active_time = 0;
+            printf("active_time = 0;\n");
+            user_send_cmd_prepare(USER_CTRL_CONN_SCO, 0, NULL);
+        }
+    }
+}
 
 static int bt_connction_status_event_handler(struct bt_event *bt)
 {
@@ -1555,7 +1580,7 @@ static int bt_connction_status_event_handler(struct bt_event *bt)
                 sys_timeout_del(app_var.phone_dly_discon_time);
                 app_var.phone_dly_discon_time = 0;
             } else {
-                app_var.wait_timer_do = sys_timeout_add(NULL, play_bt_connect_dly, 2000);
+                app_var.wait_timer_do = sys_timeout_add(NULL, play_bt_connect_dly, 1600);
                 /* tone_play_index(p_tone->bt_connect_ok, 1); */
             }
         }
@@ -1671,7 +1696,8 @@ static int bt_connction_status_event_handler(struct bt_event *bt)
         ear_detect_call_chg_master_deal();
 #endif //TCFG_EAR_DETECT_AUTO_CHG_MASTER
 #endif // TCFG_EAR_DETECT_ENABLE
-        sys_timeout_add(1, bt_sco_ctrl, 500);
+        // sys_timeout_add(1, bt_sco_ctrl, 500);
+        // app_ear_detect_phone_active_deal();
         break;
     case BT_STATUS_PHONE_HANGUP:
         esco_dump_packet = ESCO_DUMP_PACKET_CALL;
@@ -1798,6 +1824,7 @@ static int bt_connction_status_event_handler(struct bt_event *bt)
 
             }
         }
+        // waiting_esco_timerout();
         break;
     case BT_STATUS_CALL_VOL_CHANGE:
         printf("call_vol:%d", bt->value);
