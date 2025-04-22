@@ -1209,11 +1209,11 @@ void bt_set_low_latency_mode(int enable)
             }
         } else {
             if (earphone_a2dp_codec_set_low_latency_mode(enable, enable ? 800 : 600) == 0) {
-                if (enable) {
-                    tone_play(TONE_LOW_LATENCY_IN, 1);
-                } else {
-                    tone_play(TONE_LOW_LATENCY_OUT, 1);
-                }
+                // if (enable) {
+                //     tone_play(TONE_LOW_LATENCY_IN, 1);
+                // } else {
+                //     tone_play(TONE_LOW_LATENCY_OUT, 1);
+                // }
             }
         }
     }

@@ -109,7 +109,7 @@ u8 dual_bank_update_burn_boot_info_callback(u8 ret)
 
     return 0;
 }
-
+// extern void bt_tws_ota_mute(u8 mute);
 int bt_ota_event_handler(struct bt_event *bt)
 {
     int ret = 0;
@@ -127,29 +127,32 @@ int bt_ota_event_handler(struct bt_event *bt)
         __set_disable_sco_flag(0);/*ota完，esco链路建立*/
         user_send_cmd_prepare(USER_CTRL_CONN_SCO, 0, NULL);/*ota完恢复sco*/
         user_send_cmd_prepare(USER_CTRL_CONN_A2DP, 0, NULL);/*ota完恢复A2DP*/ 
-
+        bt_tws_ota_mute(0);
         update_result_set(UPDATA_SUCC);
         dual_bank_passive_update_exit(NULL);
         // gpio_direction_output(IO_PORTC_02, 0); /*ota debug */
         // delay_2ms(1000);
-        cpu_reset();
+        tws_api_sync_call_by_uuid(0xA2E22223, SYNC_CMD_UPDATE_OVER, 400);
         //sys_enter_soft_poweroff((void *)1);
         break;
     case OTA_UPDATE_ERR:
         log_info("OTA_UPDATE_ERR\n");
-        __set_disable_sco_flag(0);/*ota完，esco链路建立*/
-        user_send_cmd_prepare(USER_CTRL_CONN_SCO, 0, NULL);/*ota完恢复sco*/
-        user_send_cmd_prepare(USER_CTRL_CONN_A2DP, 0, NULL);/*ota完恢复A2DP*/ 
-        dual_bank_passive_update_exit(NULL);
+        // __set_disable_sco_flag(0);/*ota完，esco链路建立*/
+        // user_send_cmd_prepare(USER_CTRL_CONN_SCO, 0, NULL);/*ota完恢复sco*/
+        // user_send_cmd_prepare(USER_CTRL_CONN_A2DP, 0, NULL);/*ota完恢复A2DP*/ 
+        // bt_tws_ota_mute(0);
+        // dual_bank_passive_update_exit(NULL);
+        tws_api_sync_call_by_uuid(0xA2E22223, SYNC_CMD_UPDATE_OVER, 400);
         // user_send_cmd_prepare(USER_CTRL_DISCONNECTION_HCI, 0, NULL);
         //sys_enter_soft_poweroff((void *)1);
         break;
     case OTA_UPDATE_SUCC:
         log_info("OTA_UPDATE_SUCC\n");
-        update_result_set(UPDATA_SUCC);
-        dual_bank_passive_update_exit(NULL);
-        user_send_cmd_prepare(USER_CTRL_DISCONNECTION_HCI, 0, NULL);
-        cpu_reset();
+        // bt_tws_ota_mute(0);
+        // update_result_set(UPDATA_SUCC);
+        // dual_bank_passive_update_exit(NULL);
+        // user_send_cmd_prepare(USER_CTRL_DISCONNECTION_HCI, 0, NULL);
+        tws_api_sync_call_by_uuid(0xA2E22223, SYNC_CMD_UPDATE_OVER, 400);
         // sys_enter_soft_poweroff((void *)1);
         break;
     default:

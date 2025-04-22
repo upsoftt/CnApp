@@ -545,24 +545,25 @@ void user_send_data(u8 *data,u16 len)
 extern u8 get_rcsp_connect_status(void);
 void user_to_app_percent(void)
 {
-    u8 buf[ ] ={0x01, 0x00, 0x00, 0x4E, 0x00, 0x0A, 0x00, 0x01, 0x5E, 0x01,  0x01, 0x00, 0x00, 0x64,  0x01, 0x00, 0x00, 0x32,  0x50};
-	if (tws_api_get_role() == TWS_ROLE_SLAVE){
-        return;
-	}
-	if((con_handle || get_rcsp_connect_status())){
+    return;
+    // u8 buf[ ] ={0x01, 0x00, 0x00, 0x4E, 0x00, 0x0A, 0x00, 0x01, 0x5E, 0x01,   0x01, 0x02, 0x01, 0x64,   0x01, 0x02, 0x01, 0x32,  0x50};
+	// if (tws_api_get_role() == TWS_ROLE_SLAVE){
+    //     return;
+	// }
+	// if((con_handle || get_rcsp_connect_status())){
 
-	} else {
-        return;
-	}
-    log_info("bat_percent_L:%d  bat_percent_R:%d   bat_percent_C:%d\n",__this->bat_percent_L,__this->bat_percent_R,__this->bat_percent_C);
-    buf[13] = __this->bat_percent_L;
-    buf[17] = __this->bat_percent_R;
-    buf[18] = __this->bat_percent_C;
-	log_info("user_prcent_to_app:\n");
-	printf_buf(buf,sizeof(buf)/sizeof(buf[0]));
-	user_send_data(buf,sizeof(buf)/sizeof(buf[0]));	//电量返回给ble
-    buf[1] = 1;
-	user_spp_data_send(buf,sizeof(buf)/sizeof(buf[0]));	//电量返回给spp
+	// } else {
+    //     return;
+	// }
+    // log_info("bat_percent_L:%d  bat_percent_R:%d   bat_percent_C:%d\n",__this->bat_percent_L,__this->bat_percent_R,__this->bat_percent_C);
+    // buf[13] = __this->bat_percent_L;
+    // buf[17] = __this->bat_percent_R;
+    // buf[18] = __this->bat_percent_C;
+	// log_info("user_prcent_to_app:\n");
+	// printf_buf(buf,sizeof(buf)/sizeof(buf[0]));
+	// user_send_data(buf,sizeof(buf)/sizeof(buf[0]));	//电量返回给ble
+    // buf[1] = 1;
+	// user_spp_data_send(buf,sizeof(buf)/sizeof(buf[0]));	//电量返回给spp
 }
 
 /*0x4d  握手包*/
@@ -582,7 +583,7 @@ void app_connect_ack(u8 *buffer, u8 buffer_size)
 /*0x4e  获取TWS耳机信息               */
 void app_get_tws_status(u8 *buffer, u8 buffer_size)
 {
-    u8 buf[ ] ={0x01, 0x00, 0x00, 0x4E, 0x00, 0x0A, 0x00, 0x01, 0x5E, 0x01,  0x01, 0x00, 0x00, 0x64,  0x01, 0x00, 0x00, 0x32,  0x50};
+    u8 buf[ ] ={0x01, 0x00, 0x00, 0x4E, 0x00, 0x0A, 0x00, 0x01, 0x5E, 0x01,  0x01, 0x02, 0x01, 0x64,   0x01, 0x02, 0x01, 0x32,  0x50};
     buf[1] = buffer[1]; /*spp和ble的区分返回给客户*/
     buf[7] = buffer[7];
     buf[6] = buffer[6];

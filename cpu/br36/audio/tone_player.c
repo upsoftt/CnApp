@@ -959,7 +959,7 @@ __dec_start:
     }
     file_dec->tws_align_step = 0;
 #endif
-
+    
     err = audio_decoder_start(&file_dec->decoder);
     if (err) {
         goto __err2;
@@ -1748,9 +1748,10 @@ int tone_play(const char *name, u8 preemption)
 #endif /*TCFG_AUDIO_HEARING_AID_ENABLE && TCFG_AUDIO_DHA_FITTING_ENABLE*/
 
     g_printf("tone_play:%s,preemption:%d", IS_DEFAULT_SINE(name) ? "sine" : name, preemption);
+    // printf("sylon debug:tone_play:11111111111 name = %s n\n",name);
     // if(JL_rcsp_update_get_audio_mute()) {
-    //     g_printf("tone_play:rcsp update mute");
     //     return 0;
+    //     g_printf("tone_play:rcsp update mute");
     // }
     if (strcmp(os_current_task(), "app_core") != 0) {
         g_printf("Tone play not in right task.");

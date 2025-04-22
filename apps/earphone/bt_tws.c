@@ -1829,11 +1829,11 @@ int bt_tws_connction_status_event_handler(struct bt_event *evt)
             sys_auto_shut_down_enable();
         } else if (reason == SYNC_CMD_LOW_LATENCY_ENABLE) {
             if (earphone_a2dp_codec_set_low_latency_mode(1, 600) == 0) {
-                tone_play(TONE_LOW_LATENCY_IN, 1);
+                // tone_play(TONE_LOW_LATENCY_IN, 1);
             }
         } else if (reason == SYNC_CMD_LOW_LATENCY_DISABLE) {
             if (earphone_a2dp_codec_set_low_latency_mode(0, 600) == 0) {
-                tone_play(TONE_LOW_LATENCY_OUT, 1);
+                // tone_play(TONE_LOW_LATENCY_OUT, 1);
             }
         } else if (reason == SYNC_CMD_EARPHONE_CHAREG_START) {
             if (a2dp_get_status() != BT_MUSIC_STATUS_STARTING) {

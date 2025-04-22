@@ -457,9 +457,29 @@ extern void sys_auto_shut_down_enable(void);
 extern void tws_api_auto_role_switch_disable();
 extern void tws_api_auto_role_switch_enable();
 
+static u8 audio_mute_state = 0;
+u8 JL_rcsp_update_get_audio_mute()
+{
+    return audio_mute_state; 
+}
+#include "bt_tws.h"
+void bt_tws_ota_mute(u8 mute)
+{
+    audio_mute_state = mute;
+    extern void app_audio_mute(u8 value);
+    app_audio_mute(0);/*ota静音*/
+}
+
+TWS_SYNC_CALL_REGISTER(tws_ota_mute) = {
+    .uuid = 0x123A9E58,
+    .task_name = "app_core",
+    .func = bt_tws_ota_mute,
+};
+
 static void update_init_common_handle(int type)
 {
     ota_status = 1;
+    tws_api_sync_call_by_uuid(0x123A9E58, 1, 1);
     if (UPDATE_DUAL_BANK_IS_SUPPORT()) {
 #if TCFG_AUTO_SHUT_DOWN_TIME
         sys_auto_shut_down_disable();

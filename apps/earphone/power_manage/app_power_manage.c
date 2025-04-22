@@ -340,8 +340,8 @@ void vbat_check_slow(void *priv)
     } else {
         sys_timer_modify(vbat_slow_timer, 10 * 1000);
     }
-    extern void user_to_app_percent(void);
-	user_to_app_percent();
+    // extern void user_to_app_percent(void);
+	// user_to_app_percent();
 }
 
 void vbat_check_init(void)
