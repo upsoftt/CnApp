@@ -178,23 +178,27 @@ void ui_manage_scan(void *priv)
         break;
     case STATUS_POWEROFF:
         log_info("[STATUS_POWEROFF]\n");
-        if (p_led->power_off != PWM_LED1_FLASH_THREE) {
+		        if (p_led->power_off != PWM_LED0_FLASH_THREE) {
             pwm_led_mode_set(p_led->power_off);
         } else {
+		if (sys_ui_var.ui_flash_cnt==0) {
+            pwm_led_mode_set(PWM_LED_ALL_OFF);
+			}else{
             if (sys_ui_var.ui_flash_cnt) {
-                if (sys_ui_var.ui_flash_cnt < 2) {
-                    pwm_led_mode_set(PWM_LED_ALL_OFF);
+                if (sys_ui_var.ui_flash_cnt % 2) {
+                    pwm_led_mode_set(PWM_LED0_ON);
                 } else {
                     pwm_led_mode_set(PWM_LED0_ON);
                 }
-            }
-            // pwm_led_mode_set(PWM_LED0_ON);
-        }
+				}
+				}
+        	}
         break;
 
     case STATUS_BT_INIT_OK:
         log_info("[STATUS_BT_INIT_OK]\n");
 		if(user_led_time){
+            pwm_led_mode_set(PWM_LED_ALL_OFF);
             break;
 		}
         pwm_led_mode_set(p_led->bt_init_ok);
@@ -202,6 +206,7 @@ void ui_manage_scan(void *priv)
 
     case STATUS_BT_SLAVE_CONN_MASTER:
 		if(user_led_time){
+            pwm_led_mode_set(PWM_LED_ALL_OFF);
             break;
 		}
         pwm_led_mode_set(PWM_LED1_SLOW_FLASH);
@@ -217,6 +222,7 @@ void ui_manage_scan(void *priv)
     case STATUS_BT_MASTER_CONN_ONE:
         log_info("[STATUS_BT_MASTER_CONN_ONE]\n");
 		if(user_led_time){
+            pwm_led_mode_set(PWM_LED_ALL_OFF);
             break;
 		}
         pwm_led_mode_set(PWM_LED0_LED1_SLOW_FLASH);
@@ -274,6 +280,7 @@ void ui_manage_scan(void *priv)
     case STATUS_BT_TWS_CONN:
         log_info("[STATUS_BT_TWS_CONN]\n");
 		if(user_led_time){
+            pwm_led_mode_set(PWM_LED_ALL_OFF);
             break;
 		}
 #if DISTINGUISH_UI
@@ -305,6 +312,7 @@ void ui_manage_scan(void *priv)
     case STATUS_BT_TWS_DISCONN:
         log_info("[STATUS_BT_TWS_DISCONN]\n");
 		if(user_led_time){
+            pwm_led_mode_set(PWM_LED_ALL_OFF);
             break;
 		}
         pwm_led_mode_set(p_led->tws_disconnect);
@@ -328,10 +336,16 @@ void ui_update_status(u8 status)
         ui_manage_init();
     }
     log_info("update ui status :%d", status);
-    if ((status == STATUS_POWERON) || (status == STATUS_POWEROFF)) {
+    if ((status == STATUS_POWERON)) {
         log_info(">>>set ui_flash_cnt");
         sys_ui_var.ui_flash_cnt = 4;
     }
+
+    if ((status == STATUS_POWEROFF)) {
+        log_info(">>>set ui_flash_cnt");
+        sys_ui_var.ui_flash_cnt = 7;
+    }
+
 	
     cbuf_write(&(sys_ui_var.ui_cbuf), &status, 1);
     /* if (!sys_ui_var.sys_ui_timer) { */

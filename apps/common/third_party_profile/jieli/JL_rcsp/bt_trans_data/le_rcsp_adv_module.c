@@ -545,34 +545,37 @@ void user_send_data(u8 *data,u16 len)
 extern u8 get_rcsp_connect_status(void);
 void user_to_app_percent(void)
 {
-    return;
-    // u8 buf[ ] ={0x01, 0x00, 0x00, 0x4E, 0x00, 0x0A, 0x00, 0x01, 0x5E, 0x01,   0x01, 0x02, 0x01, 0x64,   0x01, 0x02, 0x01, 0x32,  0x50};
-	// if (tws_api_get_role() == TWS_ROLE_SLAVE){
-    //     return;
-	// }
-	// if((con_handle || get_rcsp_connect_status())){
+return;
+    u8 buf[ ] ={0x01, 0x00, 0x00, 0x4E, 0x00, 0x0A, 0x00, 0x01, 0x5E, 0x01,   SDK_version, 0x64,   SDK_version, 0x32,  0x50};
+	if (tws_api_get_role() == TWS_ROLE_SLAVE){
+        return;
+	}
+	if((con_handle || get_rcsp_connect_status())){
 
-	// } else {
-    //     return;
-	// }
-    // log_info("bat_percent_L:%d  bat_percent_R:%d   bat_percent_C:%d\n",__this->bat_percent_L,__this->bat_percent_R,__this->bat_percent_C);
-    // buf[13] = __this->bat_percent_L;
-    // buf[17] = __this->bat_percent_R;
-    // buf[18] = __this->bat_percent_C;
-	// log_info("user_prcent_to_app:\n");
-	// printf_buf(buf,sizeof(buf)/sizeof(buf[0]));
-	// user_send_data(buf,sizeof(buf)/sizeof(buf[0]));	//电量返回给ble
-    // buf[1] = 1;
-	// user_spp_data_send(buf,sizeof(buf)/sizeof(buf[0]));	//电量返回给spp
+	} else {
+        return;
+	}
+    log_info("bat_percent_L:%d  bat_percent_R:%d   bat_percent_C:%d\n",__this->bat_percent_L,__this->bat_percent_R,__this->bat_percent_C);
+    buf[13] = __this->bat_percent_L;
+    buf[17] = __this->bat_percent_R;
+    buf[18] = __this->bat_percent_C;
+	log_info("user_prcent_to_app:\n");
+	printf_buf(buf,sizeof(buf)/sizeof(buf[0]));
+	user_send_data(buf,sizeof(buf)/sizeof(buf[0]));	//电量返回给ble
+    buf[1] = 1;
+	user_spp_data_send(buf,sizeof(buf)/sizeof(buf[0]));	//电量返回给spp
 }
 
 /*0x4d  握手包*/
+u8 local_read_licens[12];
+
 void app_connect_ack(u8 *buffer, u8 buffer_size)
 {
-    u8 buf[ ] ={0x01, 0x00, 0x00, 0x4D, 0x00, 0x01, 0x00, 0x01, 0x4C,  0x01};
+    u8 buf[22] ={0x01, 0x00, 0x00, 0x4D, 0x00, 0x01, 0x00, 0x01, 0x4C,  0x01};
     buf[1] = buffer[1]; /*spp和ble的区分返回给客户*/
     buf[7] = buffer[7];
     buf[6] = buffer[6];
+	memcpy(&buf[10],local_read_licens,12);    
     if((con_handle || get_rcsp_connect_status())){
         log_info("\n app_connect_ack :send buf[3] = 0x%x ----len:%d  \n",buf[3],sizeof(buf)/sizeof(buf[0]));
         user_send_data(buf,sizeof(buf)/sizeof(buf[0]));
@@ -583,7 +586,7 @@ void app_connect_ack(u8 *buffer, u8 buffer_size)
 /*0x4e  获取TWS耳机信息               */
 void app_get_tws_status(u8 *buffer, u8 buffer_size)
 {
-    u8 buf[ ] ={0x01, 0x00, 0x00, 0x4E, 0x00, 0x0A, 0x00, 0x01, 0x5E, 0x01,  0x01, 0x02, 0x01, 0x64,   0x01, 0x02, 0x01, 0x32,  0x50};
+    u8 buf[ ] ={0x01, 0x00, 0x00, 0x4E, 0x00, 0x0A, 0x00, 0x01, 0x5E, 0x01,  SDK_version, 0x64,   SDK_version, 0x32,  0x50};
     buf[1] = buffer[1]; /*spp和ble的区分返回给客户*/
     buf[7] = buffer[7];
     buf[6] = buffer[6];
@@ -987,6 +990,108 @@ static void rcsp_adv_fill_mac_addr(u8 *mac_addr_buf)
     swapX(bt_get_mac_addr(), mac_addr_buf, 6);
 #endif
 }
+
+typedef struct __flash_of_lic_para_head {
+    s16 crc;
+    u16 string_len;
+    const u8 para_string[];
+} __attribute__((packed)) _flash_of_lic_para_head;
+
+//u8 local_read_licens[12];
+
+static bool license_para_head_check(u8 *para)
+{
+    _flash_of_lic_para_head *head;
+
+    //fill head
+    head = (_flash_of_lic_para_head *)para;
+
+    ///crc check
+    u8 *crc_data = (u8 *)(para + sizeof(((_flash_of_lic_para_head *)0)->crc));
+    u32 crc_len = sizeof(_flash_of_lic_para_head) - sizeof(((_flash_of_lic_para_head *)0)->crc)/*head crc*/ + (head->string_len)/*content crc,include end character '\0'*/;
+    s16 crc_sum = 0;
+
+    crc_sum = CRC16(crc_data, crc_len);
+
+    if (crc_sum != head->crc) {
+        printf("license crc error !!! %x %x \n", (u32)crc_sum, (u32)head->crc);
+        return false;
+    }
+
+    return true;
+}
+
+u8 *app_protocal_get_license_ptr(void)
+{
+    u32 flash_capacity = sdfile_get_disk_capacity();
+    u32 flash_addr = flash_capacity - 256 + 80;
+    u8 *lic_ptr = NULL;
+    _flash_of_lic_para_head *head;
+
+    printf("flash capacity:%x \n", flash_capacity);
+    lic_ptr = (u8 *)sdfile_flash_addr2cpu_addr(flash_addr);
+
+    //head length check
+    head = (_flash_of_lic_para_head *)lic_ptr;
+    if (head->string_len >= 0xff) {
+        printf("license length error !!! \n");
+        return NULL;
+    }
+
+    ////crc check
+    if (license_para_head_check(lic_ptr) == (false)) {
+        printf("license head check fail\n");
+        return NULL;
+    }
+    printf("app_protocal_get_license_ptr:\n");
+
+    put_buf(lic_ptr, 128);
+
+    lic_ptr += sizeof(_flash_of_lic_para_head);
+    return lic_ptr;
+
+
+}
+extern bool sfc_erase(int cmd, u32 addr);
+extern u32 sfc_write(const u8 *buf, u32 addr, u32 len);
+int app_protocol_license2flash(const u8 *data, u16 len)
+{
+    _flash_of_lic_para_head header;
+    u8 buffer[256];
+    u32 flash_capacity = sdfile_get_disk_capacity();
+    u32 sector = flash_capacity - 4 * 1024;
+    u32 page_addr = flash_capacity - 256;
+    u8 *auif_ptr = (u8 *)sdfile_flash_addr2cpu_addr(page_addr);
+    ///save last 256 byte
+    /* memset(buffer, 0xff, sizeof(buffer)); */
+    memcpy(buffer, auif_ptr, sizeof(buffer));
+    auif_ptr += 80;
+
+    header.string_len = len;
+    ///length
+    memcpy(&buffer[80 + sizeof(header.crc)], &(header.string_len), sizeof(header.string_len));
+    ///context
+    memcpy(&buffer[80 + sizeof(header)], data, len);
+    ///crc
+    header.crc = CRC16(&buffer[80 + sizeof(header.crc)], sizeof(header.string_len) + header.string_len);
+    memcpy(&buffer[80], &(header.crc), sizeof(header.crc));
+
+    ///check if need update data to flash,erease license erea if there are some informations in license erea
+    if (!memcmp(auif_ptr, buffer + 80, len + sizeof(_flash_of_lic_para_head))) {
+        printf("flash information the same with license\n");
+        return 0;
+    }
+    printf("erase license sector \n");
+    sfc_erase(2, sector);
+
+    printf("write license to flash \n");
+    sfc_write(buffer, page_addr, 256);
+
+    return 0;
+}
+
+
+
 #define APP_RCSP_ENABLE         0
 //static char le_adv_license[] = "957f4eab0302f5ee";
 #define LE_ADV_LICENSE_SIZE     17
@@ -1001,7 +1106,10 @@ static unsigned char le_adv_data[] = {
     // byte4 MAC
     0x12, 0x34, 0x56, 0xC2, 0x9A ,0xCB,
     // byte13 LICENSE
-    // 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    0x00, 0x00, 0x00, 0x00, 
+    0x00, 0x00, 0x00, 0x00, 
+    0x00, 0x00, 0x00, 0x00,
+//0x00, 0x00, 0x00, 0x00
     // 0X64, 0X64, 0X33, 0X63, 0X38, 0X30, 0X39, 0X33, 0X62, 0X38, 0X32 ,0X36, 0X64, 0X61, 0X33, 0X38
 };
 extern u8 get_defalut_bt_channel_sel(void);
@@ -1101,6 +1209,10 @@ static int make_set_adv_data(void)
 		put_buf(le_adv_data,  sizeof(le_adv_data));
         offset += make_eir_packet_val(&buf[offset], offset, HCI_EIR_DATATYPE_FLAGS, 0x18, 1);
 		offset += make_eir_packet_data(&buf[offset], offset, HCI_EIR_DATATYPE_MANUFACTURER_SPECIFIC_DATA, le_adv_data, sizeof(le_adv_data));
+
+        memcpy(&le_adv_data[9],local_read_licens,12);    
+
+
 		if (offset > ADV_RSP_PACKET_MAX) {
 			return -1;
 		}

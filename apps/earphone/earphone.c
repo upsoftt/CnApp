@@ -235,7 +235,7 @@ void bt_init_ok_search_index(void)
         clear_current_poweron_memory_search_index(1);
         bt_user_priv_var.auto_connection_counter = POWERON_AUTO_CONN_TIME * 1000; //8000ms
         EARPHONE_STATE_GET_CONNECT_MAC_ADDR();
-		user_led_time = sys_timeout_add(NULL, user_led, 15000);
+		user_led_time = sys_timeout_add(NULL, user_led, POWERON_AUTO_CONN_TIME * 1000); //15000
 		pwm_led_mode_set(PWM_LED_ALL_OFF);
     }
 }

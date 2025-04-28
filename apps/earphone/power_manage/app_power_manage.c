@@ -139,13 +139,13 @@ int app_power_event_handler(struct device_event *dev)
         ui_update_status(STATUS_EXIT_LOWPOWER);
         break;
     case POWER_EVENT_POWER_WARNING:
-        ui_update_status(STATUS_LOWPOWER);
+        //ui_update_status(STATUS_LOWPOWER);
         /* tone_play(TONE_LOW_POWER); */
         STATUS *p_tone = get_tone_config();
         tone_play_index(p_tone->lowpower, 1);
-        if (lowpower_timer == 0) {
-            lowpower_timer = sys_timer_add((void *)POWER_EVENT_POWER_WARNING, (void (*)(void *))power_event_to_user, LOW_POWER_WARN_TIME);
-        }
+       // if (lowpower_timer == 0) {
+       //     lowpower_timer = sys_timer_add((void *)POWER_EVENT_POWER_WARNING, (void (*)(void *))power_event_to_user, LOW_POWER_WARN_TIME);
+       // }
         break;
     case POWER_EVENT_POWER_LOW:
         r_printf(" POWER_EVENT_POWER_LOW");
@@ -401,14 +401,18 @@ void vbat_check(void *priv)
     if (bat_val <= app_var.warning_tone_v) {
         low_warn_cnt++;
     }
-    if(low_power_20_flag && (bat_val <= app_var.warning_tone_v)){
-        STATUS *p_tone = get_tone_config();
-        tone_play_index(p_tone->lowpower, 1);
+    if(low_power_20_flag && (bat_val <= 355)){
+        //STATUS *p_tone = get_tone_config();
+        //tone_play_index(p_tone->lowpower, 1);
+        
+		power_event_to_user(POWER_EVENT_POWER_WARNING);
         low_power_20_flag = 0;
     }
-    if(low_power_5_flag && (bat_val <= (app_var.warning_tone_v - 20))){
-        STATUS *p_tone = get_tone_config();
-        tone_play_index(p_tone->lowpower, 1);
+    if(low_power_5_flag && (bat_val <= (325))){
+        //STATUS *p_tone = get_tone_config();
+        //tone_play_index(p_tone->lowpower, 1);
+        
+		power_event_to_user(POWER_EVENT_POWER_WARNING);
         low_power_5_flag = 0;
     }
     /* log_info("unit_cnt:%d\n", unit_cnt); */

@@ -35,7 +35,7 @@
 
 #define POWER_OFF_CNT       22
 
-#define CUSTOM_KEY_COUNTER  3
+#define CUSTOM_KEY_COUNTER  6
 #define CUSTOM_KEY_ENABLE   1
 
 #if CUSTOM_KEY_ENABLE
@@ -335,6 +335,8 @@ void audio_aec_pitch_change_ctrl();
 void audio_surround_voice_ctrl();
 extern void start_streamer_test(void);
 static u8 key_long_cnt = 0;
+static u8 key_long_flag = 0;
+
 int app_earphone_key_event_handler(struct sys_event *event)
 {
     int ret = false;
@@ -378,9 +380,9 @@ int app_earphone_key_event_handler(struct sys_event *event)
 
     EARPHONE_CUSTOM_EARPHONE_KEY_REMAP(event, key, &key_event);
     /*双击挂断，长按拒接功能实现*/
-    if ((get_call_status() >= BT_CALL_INCOMING) && (get_call_status() <= BT_CALL_ALERT)) {
-        switch (key->event) {  
-            case KEY_EVENT_DOUBLE_CLICK:
+    switch (key->event) {  
+        case KEY_EVENT_DOUBLE_CLICK:
+            if ((get_call_status() >= BT_CALL_INCOMING) && (get_call_status() <= BT_CALL_ACTIVE) || get_call_status() == BT_CALL_ALERT) {
                 printf("phone income handler KEY_EVENT_DOUBLE_CLICK\n");
                 if ((get_call_status() == BT_CALL_OUTGOING) ||
                     (get_call_status() == BT_CALL_ALERT)) {
@@ -390,30 +392,39 @@ int app_earphone_key_event_handler(struct sys_event *event)
                 } else if (get_call_status() == BT_CALL_ACTIVE) {
                     user_send_cmd_prepare(USER_CTRL_HFP_CALL_HANGUP, 0, NULL);
                 }
-                break;
-            case KEY_EVENT_LONG:
-                printf("refuse call KEY_EVENT_LONG\n");
+                return 0;
+            }
+            break;
+        case KEY_EVENT_LONG:
+            key_long_cnt = 0;
+            key_long_flag = 1;
+            printf("refuse call KEY_EVENT_LONG\n");
+            if ((get_call_status() >= BT_CALL_INCOMING) && (get_call_status() <= BT_CALL_ACTIVE) || get_call_status() == BT_CALL_ALERT) {
                 if (get_call_status() == BT_CALL_INCOMING) {
                     user_send_cmd_prepare(USER_CTRL_HFP_CALL_HANGUP, 0, NULL);
                 }
-                break;
-            case KEY_EVENT_UP:
-                printf(" KEY_EVENT_UP\n");
-                    key_long_cnt = 0;
-                break;
-            case KEY_EVENT_HOLD:
-                printf(">>>>>>>> siri  KEY_EVENT_HOLD\n");
-                if(key_long_cnt <= 250){
+                key_long_flag = 0;
+            }
+            return 0;
+        case KEY_EVENT_UP:
+            printf(" KEY_EVENT_UP\n");
+            key_long_cnt = 0;
+            key_long_flag = 0;
+            return 0;
+
+        case KEY_EVENT_HOLD:
+            printf(">>>>>>>> siri  KEY_EVENT_HOLD key_long_cnt = %d \n",key_long_cnt);
+                if(key_long_flag && key_long_cnt <= 250) {
                     key_long_cnt++;
-                }
-                if(key_long_cnt == 10){
+                    if(key_long_cnt == 4){
                     printf("sylon debug : open siri >>>>>>>>>>>>>>>>>>> key_long_cnt = %d",key_long_cnt);
                     user_send_cmd_prepare(USER_CTRL_HFP_GET_SIRI_OPEN, 0, NULL);
-                }
-                break;
-                return 0;
-        }
+                    key_long_flag = 0;
+                } 
+            }	
+            return 0;
     }
+
     /*双击挂断，长按拒接功能实现*/  
     /*五击恢复默认功能设置*/
     if(key->event == KEY_EVENT_FIRTH_CLICK){ 
@@ -556,7 +567,7 @@ int app_earphone_key_event_handler(struct sys_event *event)
     if(goto_custom_key_flag) {
         goto_custom_key_cnt++;
         if(get_call_status() == BT_CALL_INCOMING) {
-            if(goto_custom_key_cnt == 2) {
+            if(goto_custom_key_cnt == 4) {
 //					tone_play_index(IDEX_TONE_NORMAL, 1);
                 user_send_cmd_prepare(USER_CTRL_HFP_CALL_HANGUP, 0, NULL);
                 goto_custom_key_flag = 0;

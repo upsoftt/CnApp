@@ -184,6 +184,10 @@ CONFIG_CUSTOM_CFG3_TYPE = CONFIG_CUSTOM_CFG3_VALUE;
 
 //#############################################################################################################################################
 
+
+AUTH_CODE=1;
+
+
 #ifndef CONFIG_VM_ADDR
 #define CONFIG_VM_ADDR		0
 #endif
@@ -286,12 +290,6 @@ PRCT_OPT = CONFIG_PRCT_OPT;
 VM_ADR = CONFIG_VM_ADDR;
 VM_LEN = CONFIG_VM_LEAST_SIZE;
 VM_OPT = CONFIG_VM_OPT;
-
-TON_FILE = tone.cfg;
-TON_ADR = 0XF2000;
-TON_LEN = 48K;
-TON_OPT = 1;
-
 
 #ifdef CONFIG_RESERVED_AREA1
 CAT2(CONFIG_RESERVED_AREA1, ADR) = CONFIG_RESERVED_AREA1_ADDR;

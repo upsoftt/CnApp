@@ -695,6 +695,22 @@ void cfg_file_parse(u8 idx)
     log_info("***************cfg file info list end******************");
     log_info("*******************************************************");
 #endif
+
+    log_info("app_protocal_get_license_ptr");
+
+extern u8 *app_protocal_get_license_ptr(void);
+extern u8 local_read_licens[12];
+    u8 *ptr = app_protocal_get_license_ptr();
+    if(*ptr !=NULL){
+        put_buf(ptr,12);
+        memcpy(local_read_licens,ptr,12);
+        put_buf(local_read_licens,12);
+    }else{
+        memset(local_read_licens,0xFF,12);
+    }
+    
+
+
 }
 
 extern void lmp_hci_write_local_name(const char *name);

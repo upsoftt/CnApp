@@ -41,6 +41,8 @@ static dvol_t dvol_attr;
  *数字音量级数 DIGITAL_VOL_MAX
  *数组长度 DIGITAL_VOL_MAX + 1
  */
+//汉丰 吴昊:
+
 #define DIGITAL_VOL_MAX		16
 const u16 dig_vol_table[DIGITAL_VOL_MAX + 1] = {
     0, // 0
@@ -61,6 +63,13 @@ const u16 dig_vol_table[DIGITAL_VOL_MAX + 1] = {
  13014, // 15:-2.00 db
  16384, // 16:-0.00 db
 };
+
+//汉丰 吴昊:
+//[图片]
+
+//汉丰 吴昊:
+//[图片]
+
 
 /*
 *********************************************************************

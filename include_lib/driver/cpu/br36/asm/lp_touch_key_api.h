@@ -6,7 +6,7 @@
 
 /**************************************************USER配置************************************************************************/
 //长按开机时间:
-#define CFG_M2P_CTMU_SOFTOFF_LONG_TIME 			    1000	//单位: ms
+#define CFG_M2P_CTMU_SOFTOFF_LONG_TIME 			    5000	//单位: ms
 
 //触摸按键长按复位时间配置
 #define CTMU_RESET_TIME_CONFIG			            0	//长按复位时间(ms), 配置为0关闭

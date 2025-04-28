@@ -901,6 +901,11 @@ static u8 set_channel_by_code_or_res(void)
         }
     }
     channel = (count >= 3) ? 'R' : 'L';
+ printf("set_channel_by_code  %c 1\r\n",channel);
+   gpio_set_pull_up(CONFIG_TWS_CHANNEL_CHECK_IO, 0);
+
+
+
 #elif (CONFIG_TWS_CHANNEL_SELECT == CONFIG_TWS_AS_LEFT_CHANNEL)
     channel = 'L';
 #elif (CONFIG_TWS_CHANNEL_SELECT == CONFIG_TWS_AS_RIGHT_CHANNEL)

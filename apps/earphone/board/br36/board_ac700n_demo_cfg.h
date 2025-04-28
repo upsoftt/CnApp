@@ -374,7 +374,7 @@
 /*通话降噪模式配置*/
 #define CVP_ANS_MODE	0	/*传统降噪*/
 #define CVP_DNS_MODE	1	/*神经网络降噪*/
-#define TCFG_AUDIO_CVP_NS_MODE				CVP_ANS_MODE
+#define TCFG_AUDIO_CVP_NS_MODE				CVP_DNS_MODE
 
 /*
  * ENC(双mic降噪)配置
@@ -604,7 +604,7 @@
 // #if TCFG_EQ_ENABLE
 #define TCFG_EQ_ONLINE_ENABLE                     0     //支持在线EQ调试,如果使用蓝牙串口调试，需要打开宏 APP_ONLINE_DEBUG，否则，默认使用uart调试(二选一)
 #define TCFG_BT_MUSIC_EQ_ENABLE                   1     //支持蓝牙音乐EQ
-#define TCFG_PHONE_EQ_ENABLE                      0     //支持通话近端EQ
+#define TCFG_PHONE_EQ_ENABLE                      1     //支持通话近端EQ
 #define TCFG_AUDIO_OUT_EQ_ENABLE                  0     //mix out级，增加eq高低音接口
 #define TCFG_AEC_DCCS_EQ_ENABLE           		  1     // AEC DCCS
 #define TCFG_AEC_UL_EQ_ENABLE           		  1     // AEC UL
@@ -936,7 +936,7 @@
 //最小音量提示音
 #define TCFG_MIN_VOL_PROMPT			1
 /*siri switch */
-#define SIRI_CHECK_STATUS_CONTROL_EN
+//#define SIRI_CHECK_STATUS_CONTROL_EN
 ////充电拔出开机提示音////
 #define TONE_PLAY_CHARGE_OFF_POWERON_NE			
 
@@ -947,5 +947,10 @@
 //上下曲和音量加
 #define KEY_CTL_VOL_DOWN_UP_FUN					1    //左减右加
 #define KEY_CTL_PREV_NEXT_FUN					1  // 左上右下
+
+
+#define  SDK_version    0x01, 0x03, 0x00
+
+
 #endif //CONFIG_BOARD_AC698X_DEMO
 #endif //CONFIG_BOARD_AC698X_DEMO_CFG_H

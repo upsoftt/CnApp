@@ -8,7 +8,7 @@
 #define LIB_DEBUG    0
 #define CONFIG_DEBUG_LIB(x)         (x & LIB_DEBUG)
 
-// #define CONFIG_DEBUG_ENABLE
+#define CONFIG_DEBUG_ENABLE
 
 #ifndef CONFIG_DEBUG_ENABLE
 //#define CONFIG_DEBUG_LITE_ENABLE  //轻量级打印开关, 默认关闭
@@ -57,8 +57,8 @@
 #define OTA_TWS_SAME_TIME_ENABLE     1     //是否支持TWS同步升级
 #define OTA_TWS_SAME_TIME_NEW        1     //使用新的tws ota流程
 #else
-#define OTA_TWS_SAME_TIME_ENABLE     1     //是否支持TWS同步升级
-#define OTA_TWS_SAME_TIME_NEW        1     //使用新的tws ota流程
+#define OTA_TWS_SAME_TIME_ENABLE     0     //是否支持TWS同步升级
+#define OTA_TWS_SAME_TIME_NEW        0     //使用新的tws ota流程
 #endif      //CONFIG_DOUBLE_BANK_ENABLE
 #else
 #define RCSP_UPDATE_EN 		         0     //是否支持rcsp升级
@@ -235,7 +235,7 @@
 #define CONFIG_TWS_PAIR_MODE           CONFIG_TWS_PAIR_BY_AUTO /*注意:自动配对或者按键配对开启, 可能会产生生产线混配情况，
 																  也就是客户反馈调配对，产线最好是通过是测试盒串口配对,TCFG_TEST_BOX_ENABLE,默认取消按键配对,已拦截*/
 
-#define  CONFIG_DEVELOPER_MODE                1 //开发者模式debug ,开启后可以进行按键双击配对
+#define  CONFIG_DEVELOPER_MODE                0 //开发者模式debug ,开启后可以进行按键双击配对
 
 #define ESCO_AUTO_POWER_BALANCE_ROLE_SWITCH_ENABLE    0  /*通话过程根据电量主从切换，电量平衡*/
 #define A2DP_PLAY_AUTO_ROLE_SWITCH_ENABLE             1  /*播歌根据主从信号质量自动主从切换*/
@@ -251,7 +251,7 @@
 #define CONFIG_TWS_EXTERN_DOWN_AS_LEFT        6 //外部有下拉电阻作为左耳
 #define CONFIG_TWS_SECECT_BY_CHARGESTORE      7 //充电仓决定左右耳
 
-#define CONFIG_TWS_CHANNEL_SELECT             CONFIG_TWS_MASTER_AS_LEFT      //配对方式选择
+#define CONFIG_TWS_CHANNEL_SELECT             CONFIG_TWS_EXTERN_DOWN_AS_LEFT      //配对方式选择
 
 #define CONFIG_TWS_CHANNEL_CHECK_IO           IO_PORTB_02					//上下拉电阻检测引脚
 
@@ -265,7 +265,7 @@
 
 #if CONFIG_TWS_PAIR_MODE == CONFIG_TWS_PAIR_BY_AUTO
 #if CONFIG_DEVELOPER_MODE
-#define CONFIG_TWS_AUTO_PAIR_WITHOUT_UNPAIR     /* 不取消配对也可以配对新的耳机 */
+//#define CONFIG_TWS_AUTO_PAIR_WITHOUT_UNPAIR     /* 不取消配对也可以配对新的耳机 */
 #endif
 #endif
 #if CONFIG_TWS_PAIR_MODE == CONFIG_TWS_PAIR_BY_FAST_CONN

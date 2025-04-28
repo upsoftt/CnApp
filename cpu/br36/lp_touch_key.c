@@ -70,7 +70,7 @@ const static struct ch_adjust_table ch_sensitivity_table[] = {
     {   10,  5815,   319}, // level 2
     {   10,  5815,   279}, // level 3
     {   10,  5815,   239}, // level 4
-    {   10,  5815,   199}, // level 5
+    {   10,  5815,   179}, // level 5
     {   10,  5815,   159}, // level 6
     {   10,  5815,   119}, // level 7
     {   10,  5815,    80}, // level 8

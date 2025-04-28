@@ -466,8 +466,7 @@ u8 JL_rcsp_update_get_audio_mute()
 void bt_tws_ota_mute(u8 mute)
 {
     audio_mute_state = mute;
-    extern void app_audio_mute(u8 value);
-    app_audio_mute(0);/*ota静音*/
+    tws_api_sync_call_by_uuid(0x123A9E58, mute, 1);
 }
 
 TWS_SYNC_CALL_REGISTER(tws_ota_mute) = {
@@ -479,7 +478,7 @@ TWS_SYNC_CALL_REGISTER(tws_ota_mute) = {
 static void update_init_common_handle(int type)
 {
     ota_status = 1;
-    tws_api_sync_call_by_uuid(0x123A9E58, 1, 1);
+    bt_tws_ota_mute(1);
     if (UPDATE_DUAL_BANK_IS_SUPPORT()) {
 #if TCFG_AUTO_SHUT_DOWN_TIME
         sys_auto_shut_down_disable();

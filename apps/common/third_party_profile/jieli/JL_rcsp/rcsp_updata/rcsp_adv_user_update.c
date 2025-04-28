@@ -110,6 +110,8 @@ void JL_rcsp_update_cmd_resp(void *priv, u8 OpCode, u8 OpCode_SN, u8 *data, u16 
         __set_disable_sco_flag(1);/*ota 拒绝esco链路建立*/
         user_send_cmd_prepare(USER_CTRL_DISCONN_SCO, 0, NULL);/*ota 断开sco*/
         user_send_cmd_prepare(USER_CTRL_DISCONN_A2DP, 0, NULL);/*ota 断开A2DP*/ 
+        // extern void app_audio_mute(u8 value);
+        // app_audio_mute(0);/*ota静音*/
         // audio_mute_state = 1;
         if (0 == len) {
             msg[0] = OpCode;

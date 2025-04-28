@@ -8,6 +8,10 @@
         "rcsp_adv_opt.h": "c",
         "log.h": "c",
         "le_rcsp_adv_module.h": "c",
-        "debug.h": "c"
+        "debug.h": "c",
+        "app_charge.h": "c",
+        "bt_tws.h": "c",
+        "tone_player.h": "c",
+        "app_main.h": "c"
     }
 }

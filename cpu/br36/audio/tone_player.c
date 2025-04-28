@@ -1748,11 +1748,24 @@ int tone_play(const char *name, u8 preemption)
 #endif /*TCFG_AUDIO_HEARING_AID_ENABLE && TCFG_AUDIO_DHA_FITTING_ENABLE*/
 
     g_printf("tone_play:%s,preemption:%d", IS_DEFAULT_SINE(name) ? "sine" : name, preemption);
-    // printf("sylon debug:tone_play:11111111111 name = %s n\n",name);
-    // if(JL_rcsp_update_get_audio_mute()) {
-    //     return 0;
-    //     g_printf("tone_play:rcsp update mute");
-    // }
+    printf("sylon debug:tone_play:11111111111 name = %s n\n",name);
+    if(JL_rcsp_update_get_audio_mute()) {
+        if (strcmp(name, TONE_BT_DISCONN) == 0) {
+            printf("sylon debug:TONE_BT_DISCONN\n");
+            return 0;
+        }
+        if (strcmp(name, TONE_TWS_DISCONN) == 0) {
+            printf("sylon debug:TONE_TWS_DISCONN\n");
+            return 0;
+        }
+        if(strcmp(name,TONE_POWER_OFF) == 0)
+        {
+            printf("sylon debug:tone_play:rcsp update mute, tone_power_off\n");
+            return 0;
+        }
+        return 0;
+        g_printf("tone_play:rcsp update mute");
+    }
     if (strcmp(os_current_task(), "app_core") != 0) {
         g_printf("Tone play not in right task.");
 

@@ -69,6 +69,10 @@
 #define CMD_BOX_ENTER_DUT			0x04 //进入dut模式
 #define CMD_BOX_FAST_CONN			0x05 //进入快速链接
 #define CMD_BOX_VERIFY_CODE			0x06 //获取校验码
+#define CMD_BOX_READ_SN 			0x07 //获取三元组
+#define CMD_BOX_WRITE_SN			0x08 //写入三元组
+#define CMD_BOX_READ_MAC			0x09 //读mac
+
 #define CMD_BOX_ENTER_STORAGE_MODE  0x0a //进入仓储模式
 #define CMD_BOX_GLOBLE_CFG			0x0b //测试盒配置命令(测试盒收到CMD_BOX_TWS_CHANNEL_SEL命令后发送,需使能测试盒某些配置)
 #define CMD_BOX_GET_TWS_PAIR_INFO	0x0c //测试盒获取配对信息
@@ -818,6 +822,8 @@ static int chargestore_get_tws_paired_info(u8 *buf, u8 *len)
     return 0;
 }
 
+
+
 void app_chargestore_testbox_sub_cmd_handle(u8 *buf, u8 len)
 {
     u8 temp_len;
@@ -850,13 +856,16 @@ void app_chargestore_testbox_sub_cmd_handle(u8 *buf, u8 len)
         break;
 
     case CMD_BOX_SDK_VERSION:
-        if (config_btctler_eir_version_info_len) {
-            temp_len = strlen(sdk_version_info_get());
-            send_len = (temp_len > (sizeof(send_buf) - 2)) ? sizeof(send_buf) : temp_len + 2;
-            log_info("version:%s ver_len:%x send_len:%x\n", sdk_version_info_get(), temp_len, send_len);
-            memcpy(send_buf + 2, sdk_version_info_get(), temp_len);
-            chargestore_api_write(send_buf, send_len);
-        }
+        // if (config_btctler_eir_version_info_len) {
+        //     temp_len = strlen(sdk_version_info_get());
+        //     send_len = (temp_len > (sizeof(send_buf) - 2)) ? sizeof(send_buf) : temp_len + 2;
+        //     log_info("version:%s ver_len:%x send_len:%x\n", sdk_version_info_get(), temp_len, send_len);
+        //     memcpy(send_buf + 2, sdk_version_info_get(), temp_len);
+        //     chargestore_api_write(send_buf, send_len);
+        // }
+        u8 send_ver[3]={ SDK_version,};
+        memcpy(&send_buf[2],send_ver,3);
+        chargestore_api_write(send_buf, 5);
         break;
 
     case CMD_BOX_FAST_CONN:
@@ -943,6 +952,48 @@ void app_chargestore_testbox_sub_cmd_handle(u8 *buf, u8 len)
 
         chargestore_api_write(send_buf, 2);
         break;
+    case   CMD_BOX_READ_MAC:
+        u8 tmp_mac[6];
+
+        syscfg_read(CFG_TWS_COMMON_ADDR, tmp_mac, 6);
+        memcpy(send_buf+2,tmp_mac,6);
+
+        chargestore_api_write(send_buf, 8);
+        break;
+
+    case CMD_BOX_READ_SN:
+
+        extern u8 *app_protocal_get_license_ptr(void);
+        u8 tmp_read_licens[12];
+        u8 *ptr = app_protocal_get_license_ptr();
+        if(*ptr !=NULL){
+            put_buf(ptr,12);
+            memcpy(tmp_read_licens,ptr,12);
+            put_buf(tmp_read_licens,12);
+        }else{
+            memset(tmp_read_licens,0xFF,12);
+        }
+        memcpy(send_buf+2,tmp_read_licens,12);
+        put_buf(send_buf, 14);
+        chargestore_api_write(send_buf, 14);
+        break;
+    case CMD_BOX_WRITE_SN:
+        log_info("CMD_BOX_WRITE_SN:%d ", len);
+        if(len!=14){
+            send_buf[0] = CMD_UNDEFINE;
+            send_len = 1;
+            chargestore_api_write(send_buf, send_len);
+            break;
+        }
+        put_buf(buf, 14);
+        extern int app_protocol_license2flash(const u8 *data, u16 len);
+        app_protocol_license2flash(&buf[2],12);
+        extern u8 local_read_licens[12];
+        memcpy(local_read_licens,buf+2,12);
+        chargestore_api_write(send_buf, 2);
+        break;
+
+
 
     default:
         send_buf[0] = CMD_UNDEFINE;
