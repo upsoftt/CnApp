@@ -176,7 +176,8 @@ int app_power_event_handler(struct device_event *dev)
 #endif
 
     case POWER_EVENT_POWER_CHANGE:
-        /* log_info("POWER_EVENT_POWER_CHANGE\n"); */
+        log_info("sylon debug: POWER_EVENT_POWER_CHANGE\n");
+        user_send_cmd_prepare(USER_CTRL_HFP_CMD_UPDATE_BATTARY, 0, NULL);
 #if TCFG_USER_TWS_ENABLE
         if (tws_api_get_tws_state() & TWS_STA_SIBLING_CONNECTED) {
             if (tws_api_get_tws_state()&TWS_STA_ESCO_OPEN) {
@@ -185,7 +186,6 @@ int app_power_event_handler(struct device_event *dev)
             tws_sync_bat_level();
         }
 #endif
-        user_send_cmd_prepare(USER_CTRL_HFP_CMD_UPDATE_BATTARY, 0, NULL);
 #endif
         break;
     case POWER_EVENT_POWER_CHARGE:
@@ -223,24 +223,9 @@ u8 get_vbat_percent(void)
 {
     u16 tmp_bat_val;
     u16 bat_val = get_vbat_level();
-    if (battery_full_value == 0) {
-#if TCFG_CHARGE_ENABLE
-        battery_full_value = (get_charge_full_value() - 100) / 10; //防止部分电池充不了这么高电量，充满显示未满的情况
-#else
-        battery_full_value = 420;
-#endif
-    }
-
+    printf("sylon debug: get_vbat_percent: get_vbat_level %d\n", bat_val);
     if (bat_val <= app_var.poweroff_tone_v) {
         return 0;
-    }
-
-    tmp_bat_val = remap_calculate_vbat_percent(bat_val);
-    if (!tmp_bat_val) {
-        tmp_bat_val = ((u32)bat_val - app_var.poweroff_tone_v) * 100 / (battery_full_value - app_var.poweroff_tone_v);
-        if (tmp_bat_val > 100) {
-            tmp_bat_val = 100;
-        }
     }
     static u16 bat_break = 0;
 	if(bat_val >= 405){
@@ -266,14 +251,7 @@ u8 get_vbat_percent(void)
 	} else {
         tmp_bat_val = 5;
 	}
-    if((bat_break == 0)||(bat_break > tmp_bat_val)){
-        bat_break = tmp_bat_val;
-	}
-	if (get_charge_online_flag()){
-        return (u8)tmp_bat_val;
-	} else {
-        return (u8)bat_break;
-	}
+    return (u8)tmp_bat_val;
 }
 
 bool get_vbat_need_shutdown(void)
@@ -302,6 +280,7 @@ u8  battery_value_to_phone_level(u16 bat_val)
 //获取自身的电量
 u8  get_self_battery_level(void)
 {
+    printf("sylon dbeug: get_self_battery_level: %d\n", cur_battery_level);
     return cur_battery_level;
 }
 
@@ -380,19 +359,14 @@ void vbat_check(void *priv)
     static u8 charge_online_flag = 0;
     static u8 low_power_20_flag = 1;//进入20%低电后先提醒一次
     static u8 low_power_5_flag = 1;//进入5%低电后先提醒一次
-
     if (!bat_val) {
         bat_val = get_vbat_level();
     } else {
         bat_val = (get_vbat_level() + bat_val) / 2;
     }
-
     cur_battery_level = battery_value_to_phone_level(bat_val);
-
-    /* printf("bv:%d, bl:%d , check_vbat:%d\n", bat_val, cur_battery_level, adc_check_vbat_lowpower()); */
-
+    printf("bv:%d, bl:%d , check_vbat:%d\n", bat_val, cur_battery_level, adc_check_vbat_lowpower());
     unit_cnt++;
-
     /* if (bat_val < LOW_POWER_OFF_VAL) { */
     if (adc_check_vbat_lowpower() || (bat_val <= app_var.poweroff_tone_v)) {
         low_off_cnt++;
@@ -401,20 +375,16 @@ void vbat_check(void *priv)
     if (bat_val <= app_var.warning_tone_v) {
         low_warn_cnt++;
     }
-    if(low_power_20_flag && (bat_val <= 355)){
-        //STATUS *p_tone = get_tone_config();
-        //tone_play_index(p_tone->lowpower, 1);
-        
-		power_event_to_user(POWER_EVENT_POWER_WARNING);
+    
+    if (low_power_5_flag && (bat_val <= 325)) {
+        power_event_to_user(POWER_EVENT_POWER_WARNING);
+        low_power_5_flag = 0;
+        low_power_20_flag = 0;  
+    } else if (low_power_20_flag && (bat_val <= 355)) {
+        power_event_to_user(POWER_EVENT_POWER_WARNING);
         low_power_20_flag = 0;
     }
-    if(low_power_5_flag && (bat_val <= (325))){
-        //STATUS *p_tone = get_tone_config();
-        //tone_play_index(p_tone->lowpower, 1);
-        
-		power_event_to_user(POWER_EVENT_POWER_WARNING);
-        low_power_5_flag = 0;
-    }
+    
     /* log_info("unit_cnt:%d\n", unit_cnt); */
 
     if (unit_cnt >= VBAT_DETECT_CNT) {
@@ -470,6 +440,8 @@ void vbat_check(void *priv)
             }
         } else {
             power_event_to_user(POWER_EVENT_POWER_CHARGE);
+            log_info("sylon debug: get_charge_online_flag()   POWER_EVENT_POWER_CHANGE\n");
+
         }
 
         unit_cnt = 0;
@@ -481,10 +453,12 @@ void vbat_check(void *priv)
             vbat_fast_timer = 0;
             cur_battery_level = battery_value_to_phone_level(bat_val);
             if (cur_battery_level != old_battery_level) {
+                log_info("sylon debug: vbat check old_battery_level change  POWER_EVENT_POWER_CHANGE\n");
                 power_event_to_user(POWER_EVENT_POWER_CHANGE);
             } else {
                 if (charge_online_flag != get_charge_online_flag()) {
                     //充电变化也要交换，确定是否在充电仓
+                    log_info("sylon debug: vbat check POWER_EVENT_POWER_CHANGE\n");
                     power_event_to_user(POWER_EVENT_POWER_CHANGE);
                 }
             }

@@ -303,6 +303,8 @@ static int bt_get_battery_value()
 {
     //取消默认蓝牙定时发送电量给手机，需要更新电量给手机使用USER_CTRL_HFP_CMD_UPDATE_BATTARY命令
     /*电量协议的是0-9个等级，请比例换算*/
+    printf("battery_value_to_phone_level:%d\n", battery_value_to_phone_level(get_vbat_level()));
+    printf("get_self_battery_level:%d\n", get_self_battery_level());
     return get_cur_battery_level();
 }
 
@@ -1496,9 +1498,10 @@ static int bt_connction_status_event_handler(struct bt_event *bt)
         break;
 
     case BT_STATUS_SECOND_CONNECTED:
+        log_info("BT_STATUS_SECOND_CONNECTED\n");
         clear_current_poweron_memory_search_index(0);
     case BT_STATUS_FIRST_CONNECTED:
-        log_info("BT_STATUS_CONNECTED\n");
+        log_info("BT_STATUS_FIRST_CONNECTED\n"); 
         earphone_change_pwr_mode(PWR_DCDC15, 3000);
         sys_auto_shut_down_disable();
 #if TCFG_ADSP_UART_ENABLE
@@ -2349,6 +2352,9 @@ static int bt_hci_event_handler(struct bt_event *bt)
         }
 #endif
         log_info(" HCI_EVENT_CONNECTION_COMPLETE \n");
+        extern void power_event_to_user(u8 event);
+        power_event_to_user(POWER_EVENT_POWER_CHANGE);
+        user_send_cmd_prepare(USER_CTRL_HFP_CMD_UPDATE_BATTARY, 0, NULL);
         switch (bt->value) {
         case ERROR_CODE_SUCCESS :
             log_info("ERROR_CODE_SUCCESS  \n");

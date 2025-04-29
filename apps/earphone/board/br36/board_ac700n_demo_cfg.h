@@ -949,7 +949,7 @@
 #define KEY_CTL_PREV_NEXT_FUN					1  // 左上右下
 
 
-#define  SDK_version    0x01, 0x03, 0x00
+#define  SDK_version    0x01, 0x03, 0x02
 
 
 #endif //CONFIG_BOARD_AC698X_DEMO
