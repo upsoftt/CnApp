@@ -932,13 +932,13 @@
 //                                 配置结束                                        //
 //*********************************************************************************//
 //最大音量提示音
-#define TCFG_MAX_VOL_PROMPT			1       
+#define TCFG_MAX_VOL_PROMPT			1
 //最小音量提示音
 #define TCFG_MIN_VOL_PROMPT			1
 /*siri switch */
 //#define SIRI_CHECK_STATUS_CONTROL_EN
 ////充电拔出开机提示音////
-#define TONE_PLAY_CHARGE_OFF_POWERON_NE			
+#define TONE_PLAY_CHARGE_OFF_POWERON_NE
 
 // #define UPDATA_OK_SOFT_PWROFF_EN                0
 #define EARPHONE_POWEROFF_CTRL_EN               1   //手动关机功能
@@ -949,7 +949,7 @@
 #define KEY_CTL_PREV_NEXT_FUN					1  // 左上右下
 
 
-#define  SDK_version    0x01, 0x03, 0x02
+#define  SDK_version    0x01, 0x03, 0x04
 
 
 #endif //CONFIG_BOARD_AC698X_DEMO
