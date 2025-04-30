@@ -71,10 +71,14 @@ int transport_spp_send_data_check(u16 len)
     }
     return 1;
 }
+void online_api_spp_recieve_cbk(void *priv, u8 *buf, u16 len);
+void online_api_spp_state_cbk(u8 state);
+void online_api_spp_send_wakeup(void);
 
 static void transport_spp_state_cbk(u8 state)
 {
     spp_state = state;
+    online_api_spp_state_cbk(state);
     switch (state) {
     case SPP_USER_ST_CONNECT:
         log_info("SPP_USER_ST_CONNECT ~~~\n");
@@ -96,6 +100,7 @@ static void transport_spp_state_cbk(u8 state)
 static void transport_spp_send_wakeup(void)
 {
     putchar('W');
+    online_api_send_wakeup();
 }
 
 static void transport_spp_recieve_cbk(void *priv, u8 *buf, u16 len)
@@ -104,7 +109,7 @@ static void transport_spp_recieve_cbk(void *priv, u8 *buf, u16 len)
     log_info("spp_api_rx(%d) \n", len);
     log_info_hexdump(buf, len);
     clear_sniff_cnt();
-
+    online_api_spp_recieve_cbk(priv, buf, len); 
 #if TEST_SPP_DATA_RATE
     if ((buf[0] == 'A') && (buf[1] == 'F')) {
         spp_test_start = 1;//start

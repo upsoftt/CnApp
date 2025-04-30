@@ -1961,11 +1961,8 @@ static int rcsp_ble_data_send(void *priv, u8 *buf, u16 len)
 
 int user_spp_data_send(u8 *buf, u16 len)
 {
-    int err = 0;
-    if (__this->rcsp_spp != NULL) {
-        err = __this->rcsp_spp->send_data(NULL, (u8 *)buf, len);
-    }
-    return err;
+    int ret = rcsp_spp_data_send(NULL, buf, len);
+    return ret;
 }
 
 static void user_spp_protocol_data_recieve(void *priv, void *buf, u16 len)
@@ -1985,11 +1982,34 @@ static void user_spp_protocol_data_recieve(void *priv, void *buf, u16 len)
 static void rcsp_spp_protocol_data_recieve(void *priv, void *buf, u16 len)
 {
 #if TCFG_USER_TWS_ENABLE
-    if (get_jl_update_flag() && (tws_api_get_role() == TWS_ROLE_SLAVE)) {
+    if (get_jl_update_flag()) {
         return;
     }
 #endif
+	printf("sylon debug: receive data:\n ");
+    put_buf(buf,len);
+    extern void app_data_handle(u8 *buffer, u8 buffer_size);
+    app_data_handle(buf,len);
     JL_protocol_data_recieve(priv, buf, len);
+}
+
+void online_api_spp_recieve_cbk(void *priv, u8 *buf, u16 len);
+void online_api_spp_state_cbk(u8 state);
+void online_api_spp_send_wakeup(void);
+void rcsp_and_online_data_recieve(void *priv, void *buf, u16 len)
+{
+    online_api_spp_recieve_cbk(priv, buf, len);
+    rcsp_spp_protocol_data_recieve(priv, buf, len);
+}
+void rcsp_and_online_wakeup_resume(void)
+{
+    online_api_spp_send_wakeup();
+    JL_protocol_resume();
+}
+void rcsp_and_online_spp_status_callback(u8 status)
+{
+    online_api_spp_state_cbk(status);
+    JL_spp_status_callback(status);
 }
 
 static const u8 link_key_data[16] = {0x06, 0x77, 0x5f, 0x87, 0x91, 0x8d, 0xd4, 0x23, 0x00, 0x5d, 0xf1, 0xd8, 0xcf, 0x0c, 0x14, 0x2b};
@@ -2012,7 +2032,8 @@ void rcsp_dev_select(u8 type)
         JL_bt_chl = RCSP_SPP;
 #endif
         rcsp_printf("------RCSP_SPP-----\n");
-        rcsp_spp_callback_set(JL_protocol_resume, user_spp_protocol_data_recieve, JL_spp_status_callback);
+        // rcsp_spp_callback_set(JL_protocol_resume, rcsp_spp_protocol_data_recieve, JL_spp_status_callback);
+        rcsp_spp_callback_set(rcsp_and_online_wakeup_resume, rcsp_and_online_data_recieve, rcsp_and_online_spp_status_callback);
         rcsp_ble_callback_set(NULL, NULL, NULL);
         JL_protocol_dev_switch(&JL_pro_SPP_callback);
         JL_rcsp_auth_init(rcsp_spp_data_send, (u8 *)link_key_data, NULL);

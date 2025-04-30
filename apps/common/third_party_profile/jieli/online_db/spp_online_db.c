@@ -124,6 +124,17 @@ void online_spp_init(void)
     spp_api->regist_wakeup_send(NULL, online_spp_send_wakeup);
     db_api = app_online_get_api_table();
 }
-
+void online_api_spp_recieve_cbk(void *priv, u8 *buf, u16 len)
+{
+    online_spp_recieve_cbk(priv, buf, len);
+}
+void online_api_spp_state_cbk(u8 state)
+{
+    online_spp_state_cbk(state);
+}
+void online_api_spp_send_wakeup(void)
+{
+    online_spp_send_wakeup();
+}
 #endif
 

@@ -394,7 +394,7 @@
 #define DMS_MASTER_MIC1		1 //mic1是主mic
 #define TCFG_AUDIO_DMS_MIC_MANAGE			DMS_MASTER_MIC0
 /*双mic降噪/单麦mic降噪 DUT测试模式，配合设备测试mic频响和(双mic)降噪量*/
-#define TCFG_AUDIO_DMS_DUT_ENABLE			DISABLE_THIS_MOUDLE   //spp流程
+#define TCFG_AUDIO_DMS_DUT_ENABLE		    1//DISABLE_THIS_MOUDLE   //spp流程
 
 //MIC通道配置
 #if TCFG_AUDIO_DUAL_MIC_ENABLE
@@ -949,7 +949,7 @@
 #define KEY_CTL_PREV_NEXT_FUN					1  // 左上右下
 
 
-#define  SDK_version    0x01, 0x03, 0x04
+#define  SDK_version    0x01, 0x03, 0x05
 
 
 #endif //CONFIG_BOARD_AC698X_DEMO
