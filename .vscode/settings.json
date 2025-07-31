@@ -12,6 +12,8 @@
         "app_charge.h": "c",
         "bt_tws.h": "c",
         "tone_player.h": "c",
-        "app_main.h": "c"
+        "app_main.h": "c",
+        "*.ld": "c",
+        "spp_trans_data.h": "c"
     }
 }
